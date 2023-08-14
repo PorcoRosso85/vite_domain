@@ -1,4 +1,4 @@
-import * as graphs from ".";
+import { initializeGraph } from "./initializeGraph"
 
 export class GraphComponent extends HTMLElement {
   private container: HTMLDivElement;
@@ -13,6 +13,6 @@ export class GraphComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    graphs.initializeGraph(this.container);
+    initializeGraph(this.container);
   }
 }

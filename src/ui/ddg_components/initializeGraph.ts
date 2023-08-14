@@ -1,11 +1,16 @@
 import G6 from "@antv/g6";
 import * as datas from "../../infrastructure/database/dao/mocks/datas.js"
-import * as initializegraphdata from "../../application/services/initializeGraphData"
+import * as initializegraphdata from "../../application/services/initializeGraphData.js"
 // import "./large_graph_exploration.js";
 
 const raw_data = datas.data;
 
 export function initializeGraph(container: HTMLDivElement): void {
+  graphDagreLR(container)
+  // graphLargeEploration(container)
+}
+
+function graphDagreLR(container: HTMLDivElement) {
   const gen = new initializegraphdata.initializeGraphData();
   for (let node of raw_data.nodes) {
     gen.addNode(node);
@@ -55,3 +60,6 @@ export function initializeGraph(container: HTMLDivElement): void {
   graph.data(gen.generate());
   graph.render();
 }
+
+
+function graphLargeEploration(container: HTMLDivElement) {}
