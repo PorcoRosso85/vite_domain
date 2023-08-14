@@ -1,4 +1,4 @@
-import { GraphComponent } from "./ddg/components";
+import { GraphComponent } from "./ddg_components/components";
 
 // CustomElementの定義
 class ComponentOne extends HTMLElement {
@@ -35,4 +35,4 @@ class ComponentTwo extends HTMLElement {
 // CustomElementをカスタムタグ名として登録
 customElements.define("component-one", ComponentOne);
 customElements.define("component-two", ComponentTwo);
-// customElements.define("graph-component", GraphComponent);
+customElements.define("graph-component", GraphComponent);
