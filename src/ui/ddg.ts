@@ -1,5 +1,3 @@
-import { initializeGraph } from "./ddg_components/initializeGraph"
-
 // CustomElementの定義
 class ComponentOne extends HTMLElement {
   constructor() {
@@ -44,7 +42,7 @@ export class GraphComponent extends HTMLElement {
 
     this.container = document.createElement("div");
     this.container.style.width = "100%";
-    this.container.style.height = "600px";
+    this.container.style.height = "100%";
     // shadow.appendChild(this.container);
   }
 
@@ -58,6 +56,16 @@ export class GraphComponent extends HTMLElement {
   }
 }
 
+import { graphDagreLR } from "./ddg_components/dagreLR";
+import { graphForcedDirectedBubble } from "./ddg_components/forcedDirectedBubbles";
+// import { graphLargeExploration } from "./ddg_components/largeExploration";
+
+export function initializeGraph(container: HTMLDivElement): void {
+  graphDagreLR(container)
+  // graphLargeEploration(container)
+  // initializeLargeExploration(container)
+  graphForcedDirectedBubble(container)
+}
 // CustomElementをカスタムタグ名として登録
 customElements.define("component-one", ComponentOne);
 customElements.define("component-two", ComponentTwo);

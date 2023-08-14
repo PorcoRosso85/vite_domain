@@ -2,7 +2,7 @@ import G6 from "@antv/g6";
 import insertCss from "insert-css";
 import { isNumber, isArray } from '@antv/util';
 
-function initializeLargeExploration(container) {
+export function graphLargeExploration(container: HTMLDivElement) {
 	insertCss(`
 	  .g6-component-contextmenu {
 	    position: absolute;
@@ -2062,8 +2062,4 @@ function initializeLargeExploration(container) {
 	    if (!container) return;
 	    graph.changeSize(container.scrollWidth, container.scrollHeight - 30);
 	  };
-};
-
-export {
-	initializeLargeExploration
 };
