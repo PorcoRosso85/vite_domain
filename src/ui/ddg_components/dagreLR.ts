@@ -1,6 +1,6 @@
 import G6 from "@antv/g6";
 import * as initializegraphdata from "../../application/services/initializeGraphData.js";
-import { data }  from "../../infrastructure/database/dao/mocks/datas.js";
+import { data }  from "../../infrastructure/database/dao/mocks/datas/dagreLRData.js";
 
 
 export function graphDagreLR(container: HTMLDivElement) {

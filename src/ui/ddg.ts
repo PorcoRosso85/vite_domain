@@ -59,12 +59,14 @@ export class GraphComponent extends HTMLElement {
 import { graphDagreLR } from "./ddg_components/dagreLR";
 import { graphForcedDirectedBubble } from "./ddg_components/forcedDirectedBubbles";
 // import { graphLargeExploration } from "./ddg_components/largeExploration";
+import { graphDecisionBubble } from "./ddg_components/decisionBubble";
 
 export function initializeGraph(container: HTMLDivElement): void {
   graphDagreLR(container)
   // graphLargeEploration(container)
   // initializeLargeExploration(container)
   graphForcedDirectedBubble(container)
+  graphDecisionBubble(container)
 }
 // CustomElementをカスタムタグ名として登録
 customElements.define("component-one", ComponentOne);
