@@ -1,13 +1,14 @@
 import G6 from "@antv/g6";
 import * as datas from "../../infrastructure/database/dao/mocks/datas.js"
 import * as initializegraphdata from "../../application/services/initializeGraphData.js"
-// import "./large_graph_exploration.js";
+import { initializeLargeExploration } from "./largeExploration.js"
 
 const raw_data = datas.data;
 
 export function initializeGraph(container: HTMLDivElement): void {
   graphDagreLR(container)
   // graphLargeEploration(container)
+  initializeLargeExploration(container)
 }
 
 function graphDagreLR(container: HTMLDivElement) {
@@ -62,4 +63,4 @@ function graphDagreLR(container: HTMLDivElement) {
 }
 
 
-function graphLargeEploration(container: HTMLDivElement) {}
+function graphLargeExploration(container: HTMLDivElement) {}
