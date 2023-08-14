@@ -8,4 +8,11 @@ export default defineConfig({
   test: {
     includeSource: ['src/**/*.{js,ts}'],
   },
+  root: 'src/ui',
+  // base: '/ui',
+  publicDir: 'public',
+  build: {
+    outDir: '../../dist',
+  },
+  envDir: '../../',
 })
