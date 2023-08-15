@@ -23,19 +23,19 @@
       "vitest/importMeta",
       "vitest/globals",
     ],
-
-    "paths": {
-      "src/*": ["./src*"],
-      "external/*": ["./external"],
-      "public/*": ["./public"],
-    },
+    
+    "removeComments": true,
     
     // where to compile
     "rootDir": "./src",
     "outDir": "./dist",
     
     // resolve module name
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+
+    "paths": {
+      "external/*": ["../external/*"]
+    },
   },
   "include": ["src"],
   "exclude": ["node_modules"],
