@@ -23,11 +23,13 @@
       "vitest/importMeta"
     ],
 
-    "paths": {
-      "src/*": ["./src/*"],
-      "external/*": ["./external"],
-      "public/*": ["./public"],
-    }
+    // "paths": {
+    //   "src/*": ["./src/*"],
+    //   "external/*": ["./external"],
+    //   "public/*": ["./public"],
+    // },
+    
+    "baseUrl": "./"
 
   },
   "include": ["src"],
