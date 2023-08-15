@@ -21,7 +21,15 @@
     
     "types": [
       "vitest/importMeta"
-    ]
+    ],
+
+    "paths": {
+      "src/*": ["./src/*"],
+      "external/*": ["./external"],
+      "public/*": ["./public"],
+    }
+
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"],
 }

@@ -1,10 +1,10 @@
 import G6 from "@antv/g6";
-import * as initializegraphdata from "../../application/services/initializeGraphData.js";
+import { initializeGraphData } from "src/application/services/initializeGraphData.js";
 import { data }  from "../../infrastructure/database/dao/mocks/datas/dagreLRData.js";
 
 
 export function graphDagreLR(container: HTMLDivElement) {
-  const gen = new initializegraphdata.initializeGraphData();
+  const gen = new initializeGraphData();
   const raw_data = data
   for (let node of raw_data.nodes) {
     gen.addNode(node);
