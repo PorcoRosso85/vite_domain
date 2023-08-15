@@ -20,17 +20,22 @@
     "noFallthroughCasesInSwitch": true,
     
     "types": [
-      "vitest/importMeta"
+      "vitest/importMeta",
+      "vitest/globals",
     ],
 
-    // "paths": {
-    //   "src/*": ["./src/*"],
-    //   "external/*": ["./external"],
-    //   "public/*": ["./public"],
-    // },
+    "paths": {
+      "src/*": ["./src*"],
+      "external/*": ["./external"],
+      "public/*": ["./public"],
+    },
     
-    "baseUrl": "./"
-
+    // where to compile
+    "rootDir": "./src",
+    "outDir": "./dist",
+    
+    // resolve module name
+    "baseUrl": "./src"
   },
   "include": ["src"],
   "exclude": ["node_modules"],
