@@ -1,0 +1,138 @@
+{
+  "graphLibrary": {
+    "library": "antv/g6",
+    "version": "v4.8.21",
+    "purpose": "グラフの可視化とインタラクションを実現",
+    "caution": "テスト中のバージョン。適切なバージョンの提案も受け付ける"
+  },
+  "basicConcepts": {
+    "node": "編集可能なデータを持つ要素",
+    "edge": "ノード間の関係性を示す",
+    "der": "depender、親ノードとしても機能する",
+    "dee": "dependee、子ノードとしても機能する"
+  },
+  "graphFormat": {
+    "format": "lsif形式",
+    "parentChildRelationship": "lsifのエッジ情報で定義する"
+  },
+  "displaySettings": {
+    "nodes": {
+      "derAndDee": "両方が円形で表示され、接触する形で視覚化される",
+      "color": "全色を使用し、同世代のノードは異なるカラーで、上位世代の色を優先して選択する",
+      "impl": ["graph.node(nodeFn)"]
+    },
+    "edges": {
+      "colorIntensity": "接続するノードによって色の強度が異なる",
+      "impl": ["graph.edge(edgeFn)"]
+    },
+    "grouping": "g6のhull機能でderとdeeのエリアをグループ化し視覚化する",
+    "impl": ["graph.combo(comboFn)"]
+  },
+  "interactions": {
+    "click": {
+      "singleClick": {
+        "action": "ノードの詳細情報をwebcomponentで表示",
+        "implementation": "webcomponentで行う",
+        "impl": {
+          "graph.on(event, callback)": {
+            "why": "クリックイベントを検知し、指定された動作を実行するため"
+          }
+        }
+      },
+      "doubleClick": {
+        "der": {
+          "action": "1次下層のdeeを右側に表示",
+          "area": "derのhullエリア内",
+          "impl": {
+            "graph.on(event, callback)": {
+              "why": "ダブルクリックイベントを検知し、指定された動作を実行するため"
+            }
+          }
+        },
+        "emptySpace": {
+          "action": "全der, deeが画面に収まるように表示",
+          "impl": {
+            "graph.on(event, callback)": {
+              "why": "グラフの空白部分のダブルクリックイベントを検知するため"
+            }
+          }
+        }
+      }
+    },
+    "drag": {
+      "action": "グラフ内を自由に移動できる",
+      "impl": {
+        "graph.on(event, callback)": {
+          "why": "ドラッグイベントを検知し、指定された動作を実行するため"
+        }
+      }
+    },
+    "tooltip": {
+      "implementation": "g6の組み込みモードを使用せず、カスタムwebcomponentを利用",
+      "impl": {
+        "graph.on(event, callback)": {
+          "why": "ツールチップを表示するトリガーとしてのノード上のホバーイベントを検知するため"
+        }
+      }
+    }
+  },
+  "focusAndZoom": {
+    "focus": {
+      "description": "クリックされたノードやエッジが中心に、関連要素が周りに配置",
+      "impl": {
+        "graph.focusItem(item, true)": {
+          "why": "指定したアイテム（ノードまたはエッジ）を中心に配置し、その関連要素も適切に配置します。"
+        }
+      }
+    },
+    "zoom": {
+      "range": "50%~200%",
+      "method": "マウスホイールやタッチのピンチ操作で実現",
+      "impl": {
+        "graph.zoomTo(ratio)": {
+          "why": "指定された比率に基づいてグラフをズームします。"
+        },
+        "graph.on('wheelzoom', callback)": {
+          "why": "マウスホイールでのズーム操作を捕捉するためのイベントリスナー。"
+        }
+      }
+    },
+    "errorHandling": {
+      "display": "webcomponentを使用した小さなアラート",
+      "userAction": "ユーザーはエラーメッセージに従ってノードを編集可能",
+      "helpLink": "エラーが発生した場合、ヘルプリンクが提供される",
+      "impl": {
+        "graph.on(event, callback)": {
+          "why": "エラーの状態やイベントを検出するための機能"
+        },
+        "graph.setItemState(item, state, enabled)": {
+          "why": "ユーザーがノードの状態を編集するための機能"
+        }
+      }
+    },
+    "uxDetails": {
+      "nodeDetailPopup": {
+        "design": "中央表示、webcomponentでの実装",
+        "size": "300px x 200px",
+        "colorScheme": "白背景&黒テキスト",
+        "impl": {
+          "graph.on(event, callback)": {
+            "why": "ノードをクリックしたときなどのイベントを処理し、詳細ポップアップを表示するために使用される"
+          },
+          "graph.node(nodeFn)": {
+            "why": "ノードのスタイルやその他の設定を指定するために使用される"
+          }
+        }
+      }
+    },
+    "dataStructure": {
+      "desc": "lsifのエッジ情報を元に、ノードの親子関係が定義される。ノードには直列や並列の情報が存在する。"
+    },
+    "performance": {
+      "desc": "グラフの読み込みや描画、インタラクションが快適な速度で行える。"
+    },
+    "responsiveness": {
+      "desc": "特定のデバイスや画面サイズに最適化されており、表示やインタラクションがスムーズに行える。"
+    }
+  }
+}

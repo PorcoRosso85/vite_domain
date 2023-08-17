@@ -77,6 +77,83 @@ const data = {
         desc: 'The max step number of redo & undo, works only when the enabledStack is true.',
       },
     },
+    __GraphOptions: {
+      container: {
+        desc: 'The DOM container of the graph, it can be the id of a DOM element or an HTML node.',
+      },
+      width: {
+        desc: "The width of the canvas for the graph with the unit 'px'.",
+      },
+      height: {
+        desc: "The height of the canvas for the graph with the unit 'px'.",
+      },
+      fitView: {
+        desc: 'Whether to fit the canvas to the view port.',
+      },
+      fitViewPadding: {
+        desc: 'Takes effect only when fitView: true. It is the padding between the canvas and the border of the view port.',
+      },
+      fitCenter: {
+        desc: 'Whether to translate the graph to align its center with the canvas. Its priority is lower than fitView.',
+      },
+      linkCenter: {
+        desc: "Whether to connect the edges to nodes' center.",
+      },
+      groupByTypes: {
+        desc: 'Whether to group the nodes and edges separately.',
+      },
+      autoPaint: {
+        desc: 'Whether to paint the graph automatically while items updated or view port changed.',
+      },
+      modes: {
+        desc: 'The interaction modes of this graph.',
+      },
+      nodeStateStyles: {
+        desc: 'The node styles on different states, e.g. hover, selected.',
+      },
+      edgeStateStyles: {
+        desc: 'The edge styles on different states, e.g. hover, selected.',
+      },
+      comboStateStyles: {
+        desc: 'The combo styles on different states, e.g. hover, selected.',
+      },
+      defaultNode: {
+        desc: 'Default node configurations in global, including type, size, color, and so on.',
+      },
+      defaultEdge: {
+        desc: 'Default edge configurations in global, including type, size, color, and so on.',
+      },
+      defaultCombo: {
+        desc: 'Default combo configurations in global, including type, size, color, and so on.',
+      },
+      plugins: {
+        desc: 'Plugins for the graph.',
+      },
+      animate: {
+        desc: 'Whether to activate the global animation.',
+      },
+      animateCfg: {
+        desc: 'The configurations for global animation.',
+      },
+      minZoom: {
+        desc: 'The minimum zoom ratio.',
+      },
+      maxZoom: {
+        desc: 'The maximum zoom ratio.',
+      },
+      layout: {
+        desc: 'Configurations for layout.',
+      },
+      renderer: {
+        desc: 'Render the graph with Canvas or SVG.',
+      },
+      enabledStack: {
+        desc: 'Whether to enable stack, that is, whether to support redo & undo operations.',
+      },
+      maxStep: {
+        desc: 'The max step number of redo & undo, works only when the enabledStack is true.',
+      },
+    },
     GraphFunc: {
       data: [
         {

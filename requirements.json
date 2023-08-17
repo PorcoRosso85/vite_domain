@@ -1,0 +1,79 @@
+{
+  "graphLibrary": {
+    "library": "antv/g6",
+    "version": "v4.8.21",
+    "purpose": "グラフの可視化とインタラクションを実現",
+    "caution": "テスト中のバージョン。適切なバージョンの提案も受け付ける"
+  },
+  "basicConcepts": {
+    "node": "編集可能なデータを持つ要素",
+    "edge": "ノード間の関係性を示す",
+    "der": "depender、親ノードとしても機能する",
+    "dee": "dependee、子ノードとしても機能する"
+  },
+  "graphFormat": {
+    "format": "lsif形式",
+    "parentChildRelationship": "lsifのエッジ情報で定義する"
+  },
+  "displaySettings": {
+    "nodes": {
+      "derAndDee": "両方が円形で表示され、接触する形で視覚化される",
+      "color": "全色を使用し、同世代のノードは異なるカラーで、上位世代の色を優先して選択する"
+    },
+    "edges": {
+      "colorIntensity": "接続するノードによって色の強度が異なる"
+    },
+    "grouping": "g6のhull機能でderとdeeのエリアをグループ化し視覚化する"
+  },
+  "interactions": {
+    "click": {
+      "singleClick": {
+        "action": "ノードの詳細情報をwebcomponentで表示",
+        "implementation": "webcomponentで行う"
+      },
+      "doubleClick": {
+        "der": {
+          "action": "1次下層のdeeを右側に表示",
+          "area": "derのhullエリア内"
+        },
+        "emptySpace": {
+          "action": "全der, deeが画面に収まるように表示"
+        }
+      }
+    },
+    "drag": {
+      "action": "グラフ内を自由に移動できる"
+    },
+    "tooltip": {
+      "implementation": "g6の組み込みモードを使用せず、カスタムwebcomponentを利用"
+    }
+  },
+  "focusAndZoom": {
+    "focus": "クリックされたノードやエッジが中心に、関連要素が周りに配置",
+    "zoom": {
+      "range": "50%~200%",
+      "method": "マウスホイールやタッチのピンチ操作で実現"
+    }
+  },
+  "errorHandling": {
+    "display": "webcomponentを使用した小さなアラート",
+    "userAction": "ユーザーはエラーメッセージに従ってノードを編集可能",
+    "helpLink": "エラーが発生した場合、ヘルプリンクが提供される"
+  },
+  "uxDetails": {
+    "nodeDetailPopup": {
+      "design": "中央表示、webcomponentでの実装",
+      "size": "300px x 200px",
+      "colorScheme": "白背景&黒テキスト"
+    }
+  },
+  "dataStructure": {
+    "desc": "lsifのエッジ情報を元に、ノードの親子関係が定義される。ノードには直列や並列の情報が存在する。"
+  },
+  "performance": {
+    "desc": "グラフの読み込みや描画、インタラクションが快適な速度で行える。"
+  },
+  "responsiveness": {
+    "desc": "特定のデバイスや画面サイズに最適化されており、表示やインタラクションがスムーズに行える。"
+  }
+}

@@ -1,0 +1,649 @@
+{
+  "features": {
+    "GraphOptions": {
+      "container": {
+        "desc": "The DOM container of the graph, it can be the id of a DOM element or an HTML node."
+      },
+      "width": {
+        "desc": "The width of the canvas for the graph with the unit 'px'."
+      },
+      "height": {
+        "desc": "The height of the canvas for the graph with the unit 'px'."
+      },
+      "fitView": { "desc": "Whether to fit the canvas to the view port." },
+      "fitViewPadding": {
+        "desc": "Takes effect only when fitView: true. It is the padding between the canvas and the border of the view port."
+      },
+      "fitCenter": {
+        "desc": "Whether to translate the graph to align its center with the canvas. Its priority is lower than fitView."
+      },
+      "linkCenter": {
+        "desc": "Whether to connect the edges to nodes' center."
+      },
+      "groupByTypes": {
+        "desc": "Whether to group the nodes and edges separately."
+      },
+      "autoPaint": {
+        "desc": "Whether to paint the graph automatically while items updated or view port changed."
+      },
+      "modes": { "desc": "The interaction modes of this graph." },
+      "nodeStateStyles": {
+        "desc": "The node styles on different states, e.g. hover, selected."
+      },
+      "edgeStateStyles": {
+        "desc": "The edge styles on different states, e.g. hover, selected."
+      },
+      "comboStateStyles": {
+        "desc": "The combo styles on different states, e.g. hover, selected."
+      },
+      "defaultNode": {
+        "desc": "Default node configurations in global, including type, size, color, and so on."
+      },
+      "defaultEdge": {
+        "desc": "Default edge configurations in global, including type, size, color, and so on."
+      },
+      "defaultCombo": {
+        "desc": "Default combo configurations in global, including type, size, color, and so on."
+      },
+      "plugins": { "desc": "Plugins for the graph." },
+      "animate": { "desc": "Whether to activate the global animation." },
+      "animateCfg": { "desc": "The configurations for global animation." },
+      "minZoom": { "desc": "The minimum zoom ratio." },
+      "maxZoom": { "desc": "The maximum zoom ratio." },
+      "layout": { "desc": "Configurations for layout." },
+      "renderer": { "desc": "Render the graph with Canvas or SVG." },
+      "enabledStack": {
+        "desc": "Whether to enable stack, that is, whether to support redo & undo operations."
+      },
+      "maxStep": {
+        "desc": "The max step number of redo & undo, works only when the enabledStack is true."
+      }
+    },
+    "GraphFunc": {
+      "data": {
+        "graph.data(data)": {
+          "desc": "Load the data for graph. Graph data, it should be an object containing an array of nodes and an array of edges."
+        },
+        "graph.save()": {
+          "desc": "Get the graph data. The return value has all the nodes and edges."
+        },
+        "graph.read(data)": {
+          "desc": "Read the data and render the graph. It is equal to combining graph.data(data) and graph.render()."
+        },
+        "graph.changeData(data, stack)": {
+          "desc": "Change the data source, and render the graph according to the new data. If there is layout configured on the graph, the new data will be placed according to the layout algorithm. If you do not want to layout the new data with origin layout algorithm, call graph.destroyLayout."
+        },
+        "destroyLayout()": {
+          "desc": "Destroy the layout algorithm. After that, the changeData will not place the new nodes with origin layout configurations."
+        }
+      },
+      "render": {
+        "graph.render()": {
+          "desc": "Render the graph with data onto the canvas."
+        }
+      },
+      "getSet": {
+        "GraphOptions.renderer": {
+          "desc": "Render the graph with Canvas or SVG. It is supported expecting V3.3.x."
+        },
+        "GraphOptions.enabledStack": {
+          "desc": "Whether to enable stack, that is, whether to support redo & undo operation. Support by V3.6 and latter versions."
+        },
+        "GraphOptions.maxStep": {
+          "desc": "The max step number of redo & undo, works only when the enabledStack is true. Support by V3.6 and latter versions."
+        }
+      },
+      "transform": {
+        "graph.getZoom()": {
+          "desc": "Get the current zoom ratio. The return value indicates the current zoom ratio of view port. The default value is 1."
+        },
+        "graph.zoom(ratio, center, animate, animateCfg)": {
+          "desc": "Change the scale of the graph with a relative ratio. The function can take parameters such as ratio, center, animate, and animateCfg."
+        },
+        "graph.zoomTo(toRatio, center)": {
+          "desc": "Scale the graph to a target ratio. The function can take parameters such as toRatio and center."
+        },
+        "graph.changeSize(width, height)": {
+          "desc": "Change the size of the canvas. The function takes parameters width and height."
+        },
+        "graph.translate(dx, dy, animate, animateCfg)": {
+          "desc": "Move the canvas with relative displacement. The function can take parameters such as dx, dy, animate, and animateCfg."
+        },
+        "graph.moveTo(x, y, animate, animateCfg)": {
+          "desc": "Move the canvas to a fixed position. The function can take parameters such as x, y, animate, and animateCfg."
+        },
+        "graph.fitView(padding, rules, animate, animateCfg)": {
+          "desc": "Fit the graph to the view port. The function can take parameters such as padding, rules, animate, and animateCfg."
+        },
+        "graph.fitCenter()": {
+          "desc": "Translate the graph to align its center with the canvas. The function can take parameters animate and animateCfg."
+        },
+        "graph.focusItem(item, animate, animateCfg)": {
+          "desc": "Move the graph to center at the item. This operation can be used as easing animation after searching a node. The function can take parameters such as item, animate, and animateCfg."
+        }
+      },
+      "item": {
+        "graph.addItem(type, model, stack)": {
+          "desc": "Add item(node, edge) to the graph. G6 will use the model object as the model of the newly added item, and the model might be modified. If you do not want it to be modified, use the deep cloned model instead."
+        },
+        "graph.removeItem(item, stack)": {
+          "desc": "Remove the item. When the item is the id of a group, this operation will delete the corresponding group."
+        },
+        "graph.updateItem(item, model, stack)": {
+          "desc": "Update the item with new data model. If there are combos in the graph, after calling updateItem to update the position of a node, call updateCombo(combo) to update the sizes and positions of the related combos."
+        },
+        "graph.update(item, model, stack)": {
+          "desc": "The same as updateItem(item, model)."
+        },
+        "graph.updateCombos()": {
+          "desc": "Update the sizes and positions of all the combos according to the bboxes of its children."
+        },
+        "graph.updateCombo(combo)": {
+          "desc": "Update the positions and sizes of the combo and all of its ancestors."
+        },
+        "graph.updateComboTree(item, parentId)": {
+          "desc": "Update the hierarchy structure of the combo, such as move a combo into another one."
+        },
+        "graph.refreshItem(item)": { "desc": "Refresh the item." },
+        "graph.refreshPositions()": {
+          "desc": "When the positions of nodes in their data models are changed, refresh the canvas to paint the nodes with new positions. It will update the edges in the same time."
+        },
+        "graph.node(nodeFn)": {
+          "desc": "Set the style and other configurations for each node. This function must be called before graph.render(). It does not take effect otherwise."
+        },
+        "graph.edge(edgeFn)": {
+          "desc": "Set the style and other configurations for each edge. This function must be called before graph.render(). It does not take effect otherwise."
+        },
+        "graph.combo(comboFn)": {
+          "desc": "Set the style and other configurations for each combo. This function must be called before graph.render(). It does not take effect otherwise."
+        },
+        "graph.showItem(item, stack)": {
+          "desc": "Show the item. If the item is a node, the related edges will be shown in the same time. Different from that, item.show() only show the node item itself."
+        },
+        "graph.hideItem(item, stack)": {
+          "desc": "Hide the item. If the item is a node, the related edges will be hidden in the same time. Different from that, item.hide() only hide the node item itself."
+        }
+      },
+      "state": {
+        "graph.setItemState(item, state, enabled)": {
+          "desc": "Set the item's state. v3.4 and further versions support multiple values for a state, refer to Take Use of State Mechanism. This function will emit events beforeitemstatechange and afteritemstatechange."
+        },
+        "graph.clearItemStates(item, states)": {
+          "desc": "Clear the states of the item. This function could clear multiple states in the same time."
+        },
+        "graph.priorityState(item, state)": {
+          "desc": "Raise the priority of the specified state to the highest priority."
+        }
+      },
+      "mode": {
+        "graph.setMode(mode)": {
+          "desc": "Switch the interaction mode of graph. For example, switch from edit mode to read-only mode. The function takes a parameter 'ode' which is the name of the mode."
+        },
+        "graph.getCurrentMode()": {
+          "desc": "Get the current mode. The return value indicates the current interaction mode."
+        }
+      },
+      "event": {
+        "graph.on(event, callback)": {
+          "desc": "Bind an event. The event can be a native event of the canvas, such as 'click', 'mousedown', 'mouseup', 'dblclick', 'contextmenu', 'mouseenter', 'mouseleave', 'mouseover', 'mouseout', 'mousemove', 'dragstart', 'drag', 'dragend', 'drop'. Or a custom event, such as 'node:click', 'edge:click', 'canvas:click'."
+        },
+        "graph.off(event, callback)": { "desc": "Unbind an event." },
+        "graph.emit(event, eventObject)": {
+          "desc": "Emit an event. This function can be used to simulate an event."
+        },
+        "graph.getEvents()": {
+          "desc": "Get all the events bound on the graph."
+        }
+      },
+      "behavior": {
+        "graph.addBehaviors(behaviors, modes)": {
+          "desc": "Add interaction behaviors to a mode or multiple modes. This function allows you to add specific behaviors to certain interaction modes of the graph."
+        },
+        "graph.removeBehaviors(behaviors, modes)": {
+          "desc": "Remove behavior(s) from mode(s). This function allows you to remove specific behaviors from certain interaction modes of the graph."
+        },
+        "graph.updateBehavior(behavior, mode)": {
+          "desc": "Update the configurations for a behavior from mode. This function allows you to update the configurations of a specific behavior in a certain interaction mode of the graph."
+        }
+      },
+      "layout": {
+        "graph.layout()": {
+          "desc": "Re-layout the graph with current layout configurations in graph."
+        },
+        "graph.updateLayout(cfg)": {
+          "desc": "Update the layout configurations. If there is type in cfg, type is a string and it is different from current layout method, updateLayout(cfg) will change the layout method and relayout; If there is no type in cfg, updateLayout(cfg) will relayout with current layout method and new layout configurations."
+        },
+        "destroyLayout()": {
+          "desc": "Destroy the layout algorithm. After that, the changeData will not place the new nodes with origin layout configurations."
+        }
+      },
+      "hull": {
+        "createHull(cfg: HullCfg)": {
+          "desc": "Create a hull for a cluster of nodes. The hull can be of different types such as round-convex, smooth-convex, or bubble. The hull can include specific nodes as members and can also exclude certain nodes as nonMembers. The hull can also have a specific style and padding."
+        },
+        "getHulls()": {
+          "desc": "Get all of the hulls in the current graph. The return value indicates the mapping of hull ID to the corresponding hull instance."
+        },
+        "removeHull(id: string)": {
+          "desc": "Remove a specific hull from the graph using its ID."
+        },
+        "removeHulls()": {
+          "desc": "Remove all the hulls present on the graph."
+        }
+      },
+      "calculation": {
+        "graph.getNodeDegree(node, degreeType, refresh)": {
+          "desc": "Get the in-degree, out-degree, degree, or all of the three kinds of degree. This function allows you to retrieve the degree of a specific node based on the type of degree you want to obtain."
+        },
+        "graph.getShortestPathMatrix(cache, directed)": {
+          "desc": "Get all-pairs shortest-path matrix of the graph. This function provides the shortest path matrix for all pairs of nodes in the graph."
+        },
+        "graph.getAdjMatrix(cache, directed)": {
+          "desc": "Get the adjacency matrix of the graph. This function provides the adjacency matrix representation of the graph."
+        }
+      },
+      "stack": {
+        "pushStack(action, data, stackType)": {
+          "desc": "Push operation. Implemented the undo function. Implemented the redo function. The function allows you to push an operation to the stack. The operation type is 'update' by default. The stacked data is provided as an argument. The push operation type is 'undo' by default."
+        },
+        "getUndoStack()": {
+          "desc": "Get undo stack. This function retrieves the undo stack."
+        },
+        "getRedoStack()": {
+          "desc": "Get redo stack. This function retrieves the redo stack."
+        },
+        "getStackData()": {
+          "desc": "Get the data in stack. The return value type includes undoStack and redoStack."
+        },
+        "clearStack()": {
+          "desc": "Clear the data in stack. This function clears all the data in the stack."
+        }
+      },
+      "animation": {
+        "graph.positionsAnimate()": {
+          "desc": "Update the node positions according to the data model animatively. The animateCfg of the graph will be the animation configurations."
+        },
+        "graph.stopAnimate()": { "desc": "Stop the animation on the canvas." },
+        "graph.isAnimating()": { "desc": "Return if the graph is animating." }
+      },
+      "coordinate": {
+        "graph.getPointByClient(clientX, clientY)": {
+          "desc": "Transform client/screen coordinates into point coordinates."
+        },
+        "graph.getClientByPoint(x, y)": {
+          "desc": "Transform point coordinates into client/screen coordinates."
+        },
+        "graph.getPointByCanvas(canvasX, canvasY)": {
+          "desc": "Transform canvas coordinates into point coordinates."
+        },
+        "graph.getCanvasByPoint(x, y)": {
+          "desc": "Transform point coordinates into canvas coordinates."
+        },
+        "graph.getGraphCenterPoint()": {
+          "desc": "Get the x/y in point coordinate system of the graph content's center."
+        },
+        "graph.getViewPortCenterPoint()": {
+          "desc": "Get the x/y in point coordinate system of the view port center."
+        }
+      },
+      "watermarker": {
+        "graph.setTextWaterMarker(texts, config)": {
+          "desc": "Add text water marker for the canvas. This function allows you to set a text watermark on the canvas. The watermark can be an array of texts, and you can also provide configurations for the watermark such as width, height, compatibility, and text style."
+        },
+        "graph.setImageWaterMarker(imgURL, config)": {
+          "desc": "Add image water markers for the graph. This function allows you to set an image watermark on the graph. You can provide the URL of the image and also configurations for the watermark such as width, height, compatibility, and image style."
+        }
+      },
+      "download": {
+        "graph.downloadFullImage(name, type, imageConfig)": {
+          "desc": "Export the whole graph as an image, whatever (a part of) the graph is out of the screen."
+        },
+        "graph.downloadImage(name, type, backgroundColor)": {
+          "desc": "Export the canvas as an image."
+        },
+        "graph.toDataURL(type, backgroundColor)": {
+          "desc": "Generate url of the image of the graph inside the view port."
+        },
+        "graph.toFullDataURL(callback, type, backgroundColor)": {
+          "desc": "Generate url of the image of the whole graph including the part out of the view port."
+        }
+      },
+      "destroy": {
+        "graph.clear()": {
+          "desc": "Clear all the items in the canvas. This function is used for reseting the data source and re-rendering the graph."
+        },
+        "graph.destroy()": { "desc": "Destroy the graph." }
+      }
+    },
+    "GraphLayout": {
+      "GForce Layout": {
+        "desc": "Classical force-directed layout supports GPU parallel computing, supported by G6 4.0."
+      },
+      "Force Layout": {
+        "desc": "Classical force-directed layout."
+      },
+      "Force Atlas 2 Layout": {
+        "desc": "FA2 is a kind of force directed layout, which performs better on the convergence and compactness."
+      },
+      "Fruchterman Layout": {
+        "desc": "A kind of force-directed layout."
+      },
+      "Circular Layout": {
+        "desc": "Arranges the nodes on a circle."
+      },
+      "Radial Layout": {
+        "desc": "Arranges the nodes around a focus node radially."
+      },
+      "MDS Layout": {
+        "desc": "Multidemensional Scaling."
+      },
+      "Dagre Layout": {
+        "desc": "Arranges the nodes hierarchically."
+      },
+      "Concentric Layout": {
+        "desc": "Arranges the nodes on concentric circles."
+      },
+      "Grid Layout": {
+        "desc": "Arranges the nodes on grid."
+      },
+      "Combo Force Layout": {
+        "desc": "New feature of V3.5 Designed for graph with combos."
+      },
+      "Combo Combined Layout": {
+        "desc": "New feature of V4.6 Designed for graph with combos. Support configuring the layout for items inside a combo and the layout for the outer combos and nodes."
+      }
+    },
+    "Events": {
+      "node:click": {
+        "desc": "Activated when user clicks the left button of the mouse on the node."
+      },
+      "node:dblclick": {
+        "desc": "Activated when user double clicks the left button of the mouse on the node."
+      },
+      "node:mouseenter": {
+        "desc": "Activated when the mouse enters the node."
+      },
+      "node:mousemove": {
+        "desc": "Activated while the mouse is moving inside the node. It cannot be activated by keyboard."
+      },
+      "node:mouseout": {
+        "desc": "Activated while the mouse moves out of the node."
+      },
+      "node:mouseover": {
+        "desc": "Activated when the mouse moves over the node."
+      },
+      "node:mouseleave": {
+        "desc": "Activated when the mouse leaves the node."
+      },
+      "node:mousedown": {
+        "desc": "Activated when the left or right button is clicked down on the node. It cannot be activated by keyboard."
+      },
+      "node:mouseup": {
+        "desc": "Activated when the left or right button is released on the node. It cannot be activated by keyboard."
+      },
+      "node:dragstart": {
+        "desc": "Activated when user begins to drag the node. This event is applied on the dragged node."
+      },
+      "node:drag": {
+        "desc": "Activated during the dragging process on the node. This event is applied on the dragged node."
+      },
+      "node:dragend": {
+        "desc": "Activated when user stops dragging on the node. This event is applied on the dragged node."
+      },
+      "node:dragenter": {
+        "desc": "Activated when user drags an item into a target node item. This event is applied on the target node item."
+      },
+      "node:dragleave": {
+        "desc": "Activated when user drags an item out of a target node item. This event is applied on the target node item."
+      },
+      "node:dragover": {
+        "desc": "Activated when user drags an item over a target node item. This event is applied on the target node item."
+      },
+      "node:drop": {
+        "desc": "Activated when user drops an item on a target item. This event is applied on the target item."
+      },
+      "node:touchstart": {
+        "desc": "On touch screen, this event is activated when user begin to touch the node."
+      },
+      "node:touchmove": {
+        "desc": "On touch screen, this event is activated when user is touching the node."
+      },
+      "node:touchend": {
+        "desc": "On touch screen, this event is activated when user finish touching the node."
+      },
+      "node:contextmenu": {
+        "desc": "Open the context menu when user clicks the right button of mouse on the node. Demo."
+      },
+      "edge:click": {
+        "desc": "Activated when user clicks the left button of the mouse on the edge."
+      },
+      "edge:dblclick": {
+        "desc": "Activated when user double clicks the left button of the mouse on the edge."
+      },
+      "edge:mouseenter": {
+        "desc": "Activated when the mouse enters the edge."
+      },
+      "edge:mousemove": {
+        "desc": "Activated while the mouse is moving inside the edge. It cannot be activated by keyboard."
+      },
+      "edge:mouseout": {
+        "desc": "Activated while the mouse moves out of the edge."
+      },
+      "edge:mouseover": {
+        "desc": "Activated when the mouse moves over the edge."
+      },
+      "edge:mouseleave": {
+        "desc": "Activated when the mouse leaves the edge."
+      },
+      "edge:mousedown": {
+        "desc": "Activated when the left or right button is clicked down on the edge. It cannot be activated by keyboard."
+      },
+      "edge:mouseup": {
+        "desc": "Activated when the left or right button is released on the edge. It cannot be activated by keyboard."
+      },
+      "edge:dragenter": {
+        "desc": "Activated when user drags an item into a target edge item. This event is applied on the target edge item."
+      },
+      "edge:dragleave": {
+        "desc": "Activated when user drags an item out of a target edge item. This event is applied on the target edge item."
+      },
+      "edge:dragover": {
+        "desc": "Activated when user drags an item over a target edge item. This event is applied on the target edge item."
+      },
+      "edge:drop": {
+        "desc": "Activated when user drops an item on a target edge item. This event is applied on the target edge item."
+      },
+      "edge:contextmenu": {
+        "desc": "Open the context menu when user clicks the right button of mouse on the edge. Demo."
+      },
+      "canvas:click": {
+        "desc": "Activated when user clicks the left button of the mouse on the canvas."
+      },
+      "canvas:dblclick": {
+        "desc": "Activated when user double clicks the left button of the mouse on the canvas."
+      },
+      "canvas:mouseenter": {
+        "desc": "Activated when the mouse enters the canvas."
+      },
+      "canvas:mousemove": {
+        "desc": "Activated while the mouse is moving inside the canvas. It cannot be activated by keyboard."
+      },
+      "canvas:mouseout": {
+        "desc": "Activated while the mouse moves out of the canvas."
+      },
+      "canvas:mouseover": {
+        "desc": "Activated when the mouse moves over the canvas."
+      },
+      "canvas:mouseleave": {
+        "desc": "Activated when the mouse leaves the canvas."
+      },
+      "canvas:mousedown": {
+        "desc": "Activated when the left or right button is clicked down on the canvas. It cannot be activated by keyboard."
+      },
+      "canvas:mouseup": {
+        "desc": "Activated when the left or right button is released on the canvas. It cannot be activated by keyboard."
+      },
+      "canvas:contextmenu": {
+        "desc": "Open the context menu when user clicks the right button of mouse on the canvas. Demo."
+      },
+      "canvas:dragstart": {
+        "desc": "Activated when user begins to drag the canvas. This event is applied on the dragged canvas."
+      },
+      "canvas:drag": {
+        "desc": "Activated during the dragging process on the canvas. This event is applied on the dragged canvas."
+      },
+      "canvas:dragend": {
+        "desc": "Activated when user stops dragging on the canvas. This event is applied on the dragged canvas."
+      },
+      "canvas:dragenter": {
+        "desc": "Activated when user drags the canvas into a target item. This event is applied on the target item."
+      },
+      "canvas:dragleave": {
+        "desc": "Activated when user drags the canvas out of a target item. This event is applied on the target item."
+      },
+      "canvas:drop": {
+        "desc": "Activated when user drags and drops an item on the canvas."
+      },
+      "canvas:touchstart": {
+        "desc": "On touch screen, this event is activated when user begin to touch the canvas."
+      },
+      "canvas:touchmove": {
+        "desc": "On touch screen, this event is activated when user is touching the canvas."
+      },
+      "canvas:touchend": {
+        "desc": "On touch screen, this event is activated when user finish touching the canvas."
+      },
+      "timing": {
+        "beforerender": {
+          "desc": "Emitted before graph.render / graph.read being called."
+        },
+        "afterrender": {
+          "desc": "Emitted after graph.render / graph.read being called."
+        },
+        "beforedestroy": {
+          "desc": "Emitted before graph.destroy being called."
+        },
+        "afterdestroy": {
+          "desc": "Emitted after graph.destroy being called."
+        },
+        "beforechangedata": {
+          "desc": "Emitted before graph.changeData being called."
+        },
+        "afterchangedata": {
+          "desc": "Emitted after graph.changeData being called."
+        },
+        "beforeadditem": {
+          "desc": "Emitted before graph.add / graph.addItem being called."
+        },
+        "afteradditem": {
+          "desc": "Emitted after graph.add / graph.addItem being called."
+        },
+        "beforeremoveitem": {
+          "desc": "Emitted before graph.remove / graph.removeItem being called."
+        },
+        "afterremoveitem": {
+          "desc": "Emitted after graph.remove / graph.removeItem being called."
+        },
+        "beforeupdateitem": {
+          "desc": "Emitted before graph.update / graph.updateItem being called."
+        },
+        "afterupdateitem": {
+          "desc": "Emitted after graph.update / graph.updateItem being called."
+        },
+        "beforeitemvisibilitychange": {
+          "desc": "Emitted before graph.showItem / graph.hideItem being called."
+        },
+        "afteritemvisibilitychange": {
+          "desc": "Emitted after graph.showItem / graph.hideItem being called."
+        },
+        "beforeitemstatechange": {
+          "desc": "Emitted before graph.setItemState being called."
+        },
+        "afteritemstatechange": {
+          "desc": "Emitted after graph.setItemState being called."
+        },
+        "beforeitemrefresh": {
+          "desc": "Emitted before graph.refreshItem being called."
+        },
+        "afteritemrefresh": {
+          "desc": "Emitted after graph.refreshItem being called."
+        },
+        "beforeitemstatesclear": {
+          "desc": "Emitted before graph.clearItemStates being called."
+        },
+        "afteritemstatesclear": {
+          "desc": "Emitted after graph.clearItemStates being called."
+        },
+        "beforemodechange": {
+          "desc": "Emitted before graph.setMode / graph.addBehaviors / graph.removeBehaviors being called."
+        },
+        "aftermodechange": {
+          "desc": "Emitted after graph.setMode / graph.addBehaviors / graph.removeBehaviors being called."
+        },
+        "beforelayout": {
+          "desc": "Emitted before graph layout. graph.render will layout the graph, so graph.render will activate this event as well."
+        },
+        "afterlayout": {
+          "desc": "Emitted after graph layout being done. graph.render will layout the graph, so graph.render will activate this event as well."
+        },
+        "beforegraphrefreshposition": {
+          "desc": "Emitted before graph.refreshPositions beging called."
+        },
+        "aftergraphrefreshposition": {
+          "desc": "Emitted after graph.refreshPositions beging called."
+        },
+        "beforegraphrefresh": {
+          "desc": "Emitted before graph.refresh beging called."
+        },
+        "aftergraphrefresh": {
+          "desc": "Emitted after graph.refresh beging called."
+        },
+        "beforeanimate": {
+          "desc": "Emitted before global animation."
+        },
+        "afteranimate": {
+          "desc": "Emitted after global animation."
+        },
+        "beforecreateedge": {
+          "desc": "Emitted before an edge is created by the built-in behavior create-edge."
+        },
+        "aftercreateedge": {
+          "desc": "Emitted after an edge is created by the built-in behavior create-edge."
+        },
+        "beforecollapseexpandcombo": {
+          "desc": "Emitted before an combo is collapsed or expanded, the parameter action indicates collapse or expand."
+        },
+        "aftercollapseexpandcombo": {
+          "desc": "Emitted after an combo is collapsed or expanded, the parameter action indicates collapse or expand."
+        },
+        "graphstatechange": {
+          "desc": "Emitted after graph.updateItemState being called."
+        },
+        "afteractivaterelations": {
+          "desc": "Emitted while activating a node by 'activate-relations' Behavior which is assigned to the the instance of Graph."
+        },
+        "nodeselectchange": {
+          "desc": "Emitted while the selected items are changed by 'brush-select', 'click-select' or 'lasso-select' Behavior which is assigned to the instance of Graph."
+        },
+        "itemcollapsed": {
+          "desc": "Emitted while a node is clicked to collapse or expand by 'collapse-expand' Behavior which is assigned to the instance of TreeGraph."
+        },
+        "tooltipchange": {
+          "desc": "Emitted after the show/hide state is changed by 'tooltip' or 'edge-tooltip' Behavior which is assigned to the instance of Graph."
+        },
+        "wheelzoom": {
+          "desc": "Emitted after the canvas is zoomed by 'zoom-canvas' Behavior which is assigned to the instance of Graph."
+        },
+        "viewportchange": {
+          "desc": "Emitted after the canvas is translated by graph.moveTo, graph.translate, and graph.zoom."
+        },
+        "dragnodeend": {
+          "desc": "Emitted while drag node end by 'drag-node' Behavior."
+        },
+        "stackchange": {
+          "desc": "Emitted while the redo or undo stacks are changed."
+        }
+      }
+    }
+  }
+}
