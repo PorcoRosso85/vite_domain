@@ -1,5 +1,5 @@
 import G6 from '@antv/g6';
-import { PopupComponent } from 'ui/ddg';
+import { PopupComponent } from 'ui/components';
 
 export function graphPopupTest(container: HTMLDivElement) {
   const graph = new G6.Graph({
