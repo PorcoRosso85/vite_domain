@@ -1,4 +1,4 @@
 {
-    "testing.automaticallyOpenPeekView": "never",
-    "typescript.preferences.importModuleSpecifier": "non-relative"
+  "testing.automaticallyOpenPeekView": "never",
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }
