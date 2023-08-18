@@ -1,33 +1,36 @@
-import { VertexLabels, V, MetaData, Event } from 'domain/entities/lsifData';
+import {
+  ElementTypes,
+  VertexLabels,
+  V,
+  MetaData,
+  Event,
+} from 'domain/entities/lsifData';
 import { headData } from 'infrastructure/database/dao/mocks/datas/headLsifData';
 
 export interface IVertex extends V {
   label: string; // Additional label property
 }
 
-enum AdditionalLabels {
-  group = 'group',
-}
-
-type InputData = Array<any>;
-type ProcessedData = Array<any>;
-
 export class initializeLsifData {
   private vertices: IVertex[] = [];
 
-  processListData(dataList: InputData): ProcessedData {
-    return dataList.map((data) => {
-      switch (data.label) {
-        case VertexLabels.metaData:
-          return processLabelMetaData(data);
-        case AdditionalLabels.group:
-          return processLabelGroup(data);
-        case VertexLabels.event:
-          return processLabelEvent(data);
-        default:
-          throw new Error(`Unsupported label value: ${data.label}`);
-      }
-    });
+  processListData(dataList: V[]): V {
+    // return dataList.map((data) => {
+    //   label基準で処理条件分岐
+    //   switch (data.label) {
+    //     case VertexLabels.metaData:
+    //       return processLabelMetaData(data);
+    //     case AdditionalLabels.group:
+    //       return processLabelGroup(data);
+    //     case VertexLabels.event:
+    //       return processLabelEvent(data);
+    //     default:
+    //       throw new Error(`Unsupported label value: ${data.label}`);
+    //   }
+
+    // });
+
+    return dataList.filter((data) => data.type === ElementTypes.vertex);
   }
 
   addVertex(vertex: IVertex): InitializeLsifData {
@@ -63,12 +66,18 @@ if (import.meta.vitest) {
   describe('initializeLsifDataクラス', () => {
     const initDataInstance = new initializeLsifData();
 
-    it('EVENTラベルを持つprocessListData', () => {
-      // const inputData = [{ label: VertexLabels.EVENT, value: 'sampleData' }];
-      const inputData = headData;
-      const data = initDataInstance.processListData(inputData);
+    // it('EVENTラベルを持つprocessListData', () => {
+    //   const inputData = [{ label: VertexLabels.EVENT, value: 'sampleData' }];
+    //   const dataList = initDataInstance.processListData(inputData);
+    //   expect(dataList[0].value).toBe('sampleData');
+    // });
 
-      expect(data[0].value).toBe('sampleData');
+    it('vertexタイプを持つprocessListData', () => {
+      const inputData = headData;
+      const dataList = initDataInstance.processListData(inputData);
+      dataList.forEach((i) => {
+        expect(i.type).toBe(ElementTypes.vertex);
+      });
     });
   });
 }
