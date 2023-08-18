@@ -1,27 +1,59 @@
-import { LSIFEntry } from "domain/entities/lsifData";
+import { V, Event } from 'domain/entities/lsifData';
 
-// この関数で、LSIFあるいはsqliteからのデータを、G6でカスタムノード・カスタムエッジできるように変換する
-export function initializeLsifData(entries: LSIFEntry[]): { nodes: any[], edges: any[] } {
-    const nodes = [];
-    const edges = [];
-  
-    entries.forEach(entry => {
-      if (entry.type === 'vertex' && ['metaData', 'group', 'project', 'document'].includes(entry.label)) {
-        nodes.push({
-          id: entry.id.toString(),
-          label: entry.label,
-          // 必要に応じて他の属性も追加
-        });
-      } else if (entry.type === 'edge' && ['moniker', 'next', 'textDocument/definition', 'textDocument/references'].includes(entry.label)) {
-        edges.push({
-          source: entry.outV.toString(),
-          target: entry.inV.toString(),
-          label: entry.label
-          // 必要に応じて他の属性も追加
-        });
+export interface IVertex extends V {
+  label: string; // Additional label property
+}
+
+enum VertexLabels {
+  // 根拠はprotocol.ts
+  EVENT = 'VertexLabels.event',
+}
+
+type InputData = Array<any>;
+type ProcessedData = Array<any>;
+
+export class initializeLsifData {
+  private vertices: IVertex[] = [];
+
+  processListData(dataList: InputData): ProcessedData {
+    return dataList.map((data) => {
+      switch (data.label) {
+        case VertexLabels.EVENT:
+          return processLabelEvent(data);
+        default:
+          throw new Error(`Unsupported label value: ${data.label}`);
       }
     });
-  
-    return { nodes, edges };
   }
-  
+
+  addVertex(vertex: IVertex): InitializeLsifData {
+    this.vertices.push(vertex);
+    return this;
+  }
+
+  generate(): any {
+    // The return type can be adjusted to your actual graph data type
+    // Generate graph data based on the vertices list
+    return { nodes: this.vertices };
+  }
+}
+
+function processLabelEvent(data: Event): any {
+  // add additional process here
+  return data;
+}
+
+if (import.meta.vitest) {
+  const { describe, it, expect } = import.meta.vitest;
+
+  describe('initializeLsifDataクラス', () => {
+    const initDataInstance = new initializeLsifData();
+
+    it('EVENTラベルを持つprocessListData', () => {
+      const inputData = [{ label: VertexLabels.EVENT, value: 'sampleData' }];
+      const data = initDataInstance.processListData(inputData);
+
+      expect(data[0].value).toBe('sampleData');
+    });
+  });
+}
