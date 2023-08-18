@@ -28,7 +28,7 @@ if (import.meta.vitest) {
     // 正常
     it('ソースコードをそのまま実行', () => {
       const data = fetchData(filePath, 100);
-      console.log(data);
+      // console.log(data);
     });
 
     it('ファイルが存在しない場合', () => {

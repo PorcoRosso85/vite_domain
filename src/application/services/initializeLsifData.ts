@@ -1,12 +1,12 @@
-import { V, Event } from 'domain/entities/lsifData';
+import { VertexLabels, V, MetaData, Event } from 'domain/entities/lsifData';
+import { headData } from 'infrastructure/database/dao/mocks/datas/headLsifData';
 
 export interface IVertex extends V {
   label: string; // Additional label property
 }
 
-enum VertexLabels {
-  // 根拠はprotocol.ts
-  EVENT = 'VertexLabels.event',
+enum AdditionalLabels {
+  group = 'group',
 }
 
 type InputData = Array<any>;
@@ -18,7 +18,11 @@ export class initializeLsifData {
   processListData(dataList: InputData): ProcessedData {
     return dataList.map((data) => {
       switch (data.label) {
-        case VertexLabels.EVENT:
+        case VertexLabels.metaData:
+          return processLabelMetaData(data);
+        case AdditionalLabels.group:
+          return processLabelGroup(data);
+        case VertexLabels.event:
           return processLabelEvent(data);
         default:
           throw new Error(`Unsupported label value: ${data.label}`);
@@ -38,6 +42,16 @@ export class initializeLsifData {
   }
 }
 
+// TODO: 各処理を追加すべきか検討
+function processLabelMetaData(data: MetaData): any {
+  // add additional process here
+  return data;
+}
+
+function processLabelGroup(data): any {
+  return data;
+}
+
 function processLabelEvent(data: Event): any {
   // add additional process here
   return data;
@@ -50,7 +64,8 @@ if (import.meta.vitest) {
     const initDataInstance = new initializeLsifData();
 
     it('EVENTラベルを持つprocessListData', () => {
-      const inputData = [{ label: VertexLabels.EVENT, value: 'sampleData' }];
+      // const inputData = [{ label: VertexLabels.EVENT, value: 'sampleData' }];
+      const inputData = headData;
       const data = initDataInstance.processListData(inputData);
 
       expect(data[0].value).toBe('sampleData');
