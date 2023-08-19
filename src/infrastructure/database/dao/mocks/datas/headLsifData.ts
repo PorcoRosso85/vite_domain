@@ -19,7 +19,7 @@ function fetchData(filePath, numberOfRows) {
   return extractedLines;
 }
 
-export const headData = fetchData(filePath, 100);
+export const headData = fetchData(filePath, 10);
 
 if (import.meta.vitest) {
   const { describe, it, expect } = import.meta.vitest;
