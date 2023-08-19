@@ -1,47 +1,24 @@
-class ComponentOne extends HTMLElement {
-  constructor() {
-    super();
+// basic_components
+import { registerHelloComponents } from 'ui/basic_components';
+registerHelloComponents();
 
-    const shadow = this.attachShadow({ mode: 'open' });
-    const container = document.createElement('div');
-
-    container.textContent = 'Hello from Component One!';
-    container.style.border = '1px solid black';
-    container.style.padding = '10px';
-    container.style.marginBottom = '10px';
-
-    shadow.appendChild(container);
-  }
-}
-
-class ComponentTwo extends HTMLElement {
-  constructor() {
-    super();
-
-    const shadow = this.attachShadow({ mode: 'open' });
-    const container = document.createElement('div');
-
-    container.textContent = 'Hello from Component Two!';
-    container.style.border = '1px solid red';
-    container.style.padding = '10px';
-
-    shadow.appendChild(container);
-  }
-}
-
-import { graphDagreLR } from 'ui/ddg_components/dagreLR';
-import { graphForcedDirectedBubble } from 'ui/ddg_components/forcedDirectedBubbles';
-// import { graphLargeExploration } from "ui/ddg_components/largeExploration";
-import { graphDecisionBubble } from 'ui/ddg_components/decisionBubble';
-import { graphPopupTest } from 'ui/ddg_components/popupTest';
+// ddg_components
+import {
+  graphDagreLR,
+  graphDecisionBubble,
+  graphLsif,
+  graphPopupTest,
+  graphForcedDirectedBubble,
+} from 'ui/ddg_components';
 
 export function initializeGraph(container: HTMLDivElement): void {
-  graphDagreLR(container);
+  // graphDagreLR(container);
   // graphLargeEploration(container)
   // initializeLargeExploration(container)
-  graphForcedDirectedBubble(container);
-  graphDecisionBubble(container);
+  // graphForcedDirectedBubble(container);
+  // graphDecisionBubble(container);
   graphPopupTest(container);
+  // graphLsif(container);
 }
 
 export class GraphComponent extends HTMLElement {
@@ -54,8 +31,11 @@ export class GraphComponent extends HTMLElement {
     shadow.appendChild(slot);
 
     this.container = document.createElement('div');
-    this.container.style.width = '100%';
-    this.container.style.height = '100%';
+    // コンポーネントの内部サイズを親要素のサイズに合わせるためのもの
+    // this.container.style.width = '100%';
+    // this.container.style.height = '100%';
+    this.container.style.width = '800px';
+    this.container.style.height = '800px';
     // shadow.appendChild(this.container);
   }
 
@@ -69,18 +49,7 @@ export class GraphComponent extends HTMLElement {
   }
 }
 
-export class PopupComponent extends HTMLElement {
-  constructor() {
-    super();
-    this.innerHTML = `
-      <div style="background-color: white; border: 1px solid black; padding: 20px;">
-        This is a custom popup.
-      </div>
-    `;
-  }
+function registerGraphComponent() {
+  customElements.define('graph-component', GraphComponent);
 }
-
-customElements.define('component-one', ComponentOne);
-customElements.define('component-two', ComponentTwo);
-customElements.define('graph-component', GraphComponent);
-customElements.define('popup-component', PopupComponent);
+registerGraphComponent();
