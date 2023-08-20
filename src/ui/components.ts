@@ -3,13 +3,13 @@ import { registerHelloComponents } from 'ui/basic_components';
 registerHelloComponents();
 
 // ddg_components
+import { graphLsif } from 'ui/ddg_components';
 import {
   graphDagreLR,
   graphDecisionBubble,
-  graphLsif,
   graphPopupTest,
   graphForcedDirectedBubble,
-} from 'ui/ddg_components';
+} from 'ui/ddg_components/samples';
 
 export function initializeGraph(container: HTMLDivElement): void {
   // graphDagreLR(container);
@@ -17,7 +17,7 @@ export function initializeGraph(container: HTMLDivElement): void {
   // initializeLargeExploration(container)
   // graphForcedDirectedBubble(container);
   // graphDecisionBubble(container);
-  // graphPopupTest(container);
+  graphPopupTest(container);
   graphLsif(container);
 }
 
