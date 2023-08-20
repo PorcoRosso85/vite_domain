@@ -3,6 +3,7 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
 // import { serializedHeadData } from 'infrastructure/database/dao/mocks/datas/headLsifData';
+import cors from 'cors';
 
 interface serializedHeadData {
   title: string;
@@ -26,6 +27,16 @@ const serializedHeadData: serializedHeadData = {
 
 const app = express();
 const port = 3000;
+
+// 開発用にすべてのエンドポイントを公開
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // クライアントのオリジン
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204,
+  }),
+);
 
 app.get('/api/data', (req: Request, res: Response) => {
   res.json(serializedHeadData);

@@ -17,8 +17,8 @@ export function initializeGraph(container: HTMLDivElement): void {
   // initializeLargeExploration(container)
   // graphForcedDirectedBubble(container);
   // graphDecisionBubble(container);
-  graphPopupTest(container);
-  // graphLsif(container);
+  // graphPopupTest(container);
+  graphLsif(container);
 }
 
 export class GraphComponent extends HTMLElement {
