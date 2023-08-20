@@ -1,13 +1,14 @@
-import { ElementTypes, V } from 'domain/entities/lsifData';
-import { headData } from 'infrastructure/database/dao/mocks/datas/headLsifData';
+import { ElementTypes, V, VertexLabels } from 'domain/entities/lsifData';
+// サービスするならcomment, テストするならuncomment
+// import { headData } from 'infrastructure/database/dao/mocks/datas/headLsifData';
 import Logger from 'domain/logs/logs';
 
 export class initializeLsifData {
   private vertices: V[] = [];
 
-  processListData(dataList: V[]): V {
+  processListData(dataList: V[]): V[] {
     // return dataList.map((data) => {
-    //   label基準で処理条件分岐
+    // //   label基準で処理条件分岐
     //   switch (data.label) {
     //     case VertexLabels.metaData:
     //       return processLabelMetaData(data);
@@ -32,8 +33,6 @@ export class initializeLsifData {
   }
 
   generate(): any {
-    // The return type can be adjusted to your actual graph data type
-    // Generate graph data based on the vertices list
     return { nodes: this.vertices };
   }
 }
@@ -64,14 +63,18 @@ if (import.meta.vitest) {
     it('vertexタイプを持つprocessListData', () => {
       const initDataInstance = new initializeLsifData();
       const dataList = initDataInstance.processListData(headData);
-      dataList.forEach((i) => {
+      dataList.forEach((i: any) => {
         Logger.debug(`headData: \n${JSON.stringify(i, null, 2)}`);
         expect(i.type).toBe(ElementTypes.vertex);
       });
     });
     it('vertexが1行追加されているか, 追加した頂点がverticeリストに正しく格納されているか', () => {
       const initDataInstance = new initializeLsifData();
-      const vertex: V = { type: ElementTypes.vertex };
+      const vertex: V = {
+        type: ElementTypes.vertex,
+        label: VertexLabels.document,
+        id: 'dummyId',
+      };
       initDataInstance.addVertex(vertex);
       const vertices = (initDataInstance as any).vertices;
 
@@ -80,8 +83,16 @@ if (import.meta.vitest) {
     });
     it('複数のverticeが追加されているか', () => {
       const initDataInstance = new initializeLsifData();
-      const vertex1: V = { type: ElementTypes.vertex };
-      const vertex2: V = { type: ElementTypes.vertex };
+      const vertex1: V = {
+        type: ElementTypes.vertex,
+        label: VertexLabels.document,
+        id: 'dummyId',
+      };
+      const vertex2: V = {
+        type: ElementTypes.vertex,
+        label: VertexLabels.document,
+        id: 'dummyId',
+      };
       initDataInstance.addVertex(vertex1).addVertex(vertex2);
       const vertices = (initDataInstance as any).vertices;
 
@@ -91,7 +102,11 @@ if (import.meta.vitest) {
     });
     it('同じ頂点を複数回追加したときの動作を確認', () => {
       const initDataInstance = new initializeLsifData();
-      const vertex: V = { type: ElementTypes.vertex };
+      const vertex: V = {
+        type: ElementTypes.vertex,
+        label: VertexLabels.document,
+        id: 'dummyId',
+      };
       initDataInstance.addVertex(vertex).addVertex(vertex);
       const vertices = (initDataInstance as any).vertices;
 
@@ -101,7 +116,11 @@ if (import.meta.vitest) {
     });
     it('vertexでないときエラーを返す', () => {
       const instance = new initializeLsifData();
-      const edge: V = { type: ElementTypes.edge };
+      const edge: V = {
+        type: ElementTypes.edge,
+        label: VertexLabels.document,
+        id: 'dummyId',
+      };
 
       expect(() => instance.addVertex(edge)).to.throw(
         Error,
@@ -110,3 +129,18 @@ if (import.meta.vitest) {
     });
   });
 }
+
+// もしif配下だけでimportしたいなら
+// TODO: テストが認識されない問題
+// if (import.meta.vitest) {
+//   const { describe, it, expect } = import.meta.vitest;
+
+//   (async () => {
+//     const module = await import(
+//       'infrastructure/database/dao/mocks/datas/headLsifData'
+//     );
+//     const headData = module.headData;
+
+//     describe('initializeLsifDataクラス', () => {}
+//   });
+// }
