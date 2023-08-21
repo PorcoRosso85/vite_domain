@@ -1,7 +1,6 @@
 import G6 from '@antv/g6';
 import { initializeLsifData } from 'application/services/initializeLsifData';
 import Logger from 'domain/logs/logs';
-// import { headData } from 'infrastructure/database/dao/mocks/datas/headLsifData';
 import { initializeGraphData } from 'application/services/initializeGraphData';
 // import { data as rawData } from 'infrastructure/database/dao/mocks/datas/dagreLRData';
 import { expressFetchData } from 'ui/ddg_components/express';

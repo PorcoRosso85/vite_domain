@@ -1,26 +1,38 @@
+import { LsifDataDto } from 'application/dtos/lsifDataDto';
 import { ElementTypes, V, VertexLabels } from 'domain/entities/lsifData';
+// TODO: headDataをdomain層から取得すること、appはinfraに依存することは少ない、domain/repositoriesに依存する
 // サービスするならcomment, テストするならuncomment
 // import { headData } from 'infrastructure/database/dao/mocks/datas/headLsifData';
-import Logger from 'domain/logs/logs';
+import createLogger from 'domain/logs/loggerFactory';
+import { LsifDataRepository } from 'domain/repositories/lsifDataRepository';
 
 export class initializeLsifData {
   private vertices: V[] = [];
 
-  processListData(dataList: V[]): V[] {
-    // return dataList.map((data) => {
-    // //   label基準で処理条件分岐
-    //   switch (data.label) {
-    //     case VertexLabels.metaData:
-    //       return processLabelMetaData(data);
-    //     case AdditionalLabels.group:
-    //       return processLabelGroup(data);
-    //     case VertexLabels.event:
-    //       return processLabelEvent(data);
-    //     default:
-    //       throw new Error(`Unsupported label value: ${data.label}`);
-    //   }
+  constructor(private lsifDataRepository: LsifDataRepository) {}
 
-    // });
+  // processListData(dataList: V[]): V[] {
+  //   // return dataList.map((data) => {
+  //   // //   label基準で処理条件分岐
+  //   //   switch (data.label) {
+  //   //     case VertexLabels.metaData:
+  //   //       return processLabelMetaData(data);
+  //   //     case AdditionalLabels.group:
+  //   //       return processLabelGroup(data);
+  //   //     case VertexLabels.event:
+  //   //       return processLabelEvent(data);
+  //   //     default:
+  //   //       throw new Error(`Unsupported label value: ${data.label}`);
+  //   //   }
+
+  //   // });
+  //   return dataList.filter((data) => data.type === ElementTypes.vertex);
+  // }
+
+  // voidにすることで抽象度を確保＝依存度低下
+  async processListdata(): Promise<void> {
+    // async processListData(): Promise<V[]> {
+    const dataList = await this.lsifDataRepository.getDataList();
     return dataList.filter((data) => data.type === ElementTypes.vertex);
   }
 
@@ -32,8 +44,8 @@ export class initializeLsifData {
     return this;
   }
 
-  generate(): any {
-    return { nodes: this.vertices };
+  generate(): LsifDataDto {
+    return new LsifDataDto(this.vertices);
   }
 }
 
