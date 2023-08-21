@@ -4,22 +4,9 @@ import Logger from 'domain/logs/logs';
 // import { headData } from 'infrastructure/database/dao/mocks/datas/headLsifData';
 import { initializeGraphData } from 'application/services/initializeGraphData';
 // import { data as rawData } from 'infrastructure/database/dao/mocks/datas/dagreLRData';
-
-async function fetchData() {
-  console.log('Attempting to fetch data...');
-  try {
-    // const res = await fetch('http://localhost:3000/api/data', { mode: 'cors' });
-    const res = await fetch('/api/data', { mode: 'cors' });
-    console.log('Response received:', res);
-    const data = await res.json();
-    console.log('Data parsed:', data);
-  } catch (error) {
-    console.error('Fetch failed: ', error);
-  }
-}
+import { expressFetchData } from 'ui/ddg_components/express';
 
 export function graphLsif(container: HTMLDivElement) {
-  fetchData();
   const tipDiv = document.createElement('div');
   tipDiv.innerHTML = 'Here is LSIF';
   container.appendChild(tipDiv);
@@ -62,6 +49,10 @@ export function graphLsif(container: HTMLDivElement) {
     },
   });
 
+  // graph.on('click') {
+  //   expressFetchData();
+  // }
+  //
   // const initDataInstance = new initializeLsifData();
   // headData.forEach((i) => {
   //   initDataInstance.addVertex(i);

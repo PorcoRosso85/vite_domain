@@ -7,6 +7,10 @@ export default defineConfig({
 
   build: {
     outDir: './dist',
+    rollupOptions: {
+      // このファイルの依存先だけがビルドされる
+      input: ['./src/ui/components.ts', './index.html'],
+    },
   },
   define: {
     'import.meta.vitest': false,
