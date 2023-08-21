@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "ts-node dist/index.ts",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ts-node": "ts-node"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
@@ -16,7 +17,9 @@
     "dependency-cruiser": "^13.1.3",
     "dotenv": "^16.3.1",
     "eslint-plugin-import": "^2.28.1",
+    "http-server": "^14.1.1",
     "prettier": "^3.0.2",
+    "ts-node": "^10.9.1",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.34.1",
     "winston": "^3.10.0"
@@ -26,7 +29,6 @@
     "@antv/util": "^3.3.4",
     "express": "^4.18.2",
     "insert-css": "^2.0.0",
-    "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.9"
   }
