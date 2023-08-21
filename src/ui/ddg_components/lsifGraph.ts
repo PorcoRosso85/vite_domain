@@ -3,7 +3,7 @@ import { initializeLsifData } from 'application/services/initializeLsifData';
 import Logger from 'domain/logs/logs';
 import { initializeGraphData } from 'application/services/initializeGraphData';
 // import { data as rawData } from 'infrastructure/database/dao/mocks/datas/dagreLRData';
-import { expressFetchData } from 'ui/ddg_components/express';
+import { expressFetchData } from 'ui/ddg_components/expressClient';
 
 export function graphLsif(container: HTMLDivElement) {
   const tipDiv = document.createElement('div');
