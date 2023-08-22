@@ -23,17 +23,26 @@
 
     "removeComments": true,
 
+    // 明示的にcommonjs, esmoduleの相互運用を有効化
+    "esModuleInterop": true,
+    // "moduleDetection":
+
+    // debugログ
+    "traceResolution": false,
+
     // where to compile
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "./dist/server",
 
     // resolve module name
     "baseUrl": "./src",
 
     "paths": {
       "external/*": ["../external/*"]
-    }
+    },
+    "noEmit": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  // "exclude": ["node_modules", "src/ui/**/*"],
+  "exclude": ["node_modules", "**/*samples*/*"]
 }

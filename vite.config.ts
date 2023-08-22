@@ -3,10 +3,8 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
-
   build: {
-    outDir: './dist',
+    outDir: './dist/client',
     rollupOptions: {
       // このファイルの依存先だけがビルドされる
       input: ['./src/ui/components.ts', './index.html'],
@@ -25,4 +23,5 @@ export default defineConfig({
       '/api': 'http://localhost:3000',
     },
   },
+  plugins: [tsconfigPaths()],
 });
