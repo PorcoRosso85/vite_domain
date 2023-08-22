@@ -1,14 +1,25 @@
 export namespace ErrorStatus {
   export const ErrorCodes = {
-    AUTHENTICATION_ERROR: 'AUTHENTICATION_ERROR',
-    AUTHORIZATION_ERROR: 'AUTHORIZATION_ERROR',
-    DATABASE_ERROR: 'DATABASE_ERROR',
-    EXTERNAL_SERVICE_ERROR: 'EXTERNAL_SERVICE_ERROR',
-    VALIDATION_ERROR: 'VALIDATION_ERROR',
+    AUTHENTICATION_ERROR: 'RC0000',
+    AUTHORIZATION_ERROR: 'RC0000',
+    DATABASE_ERROR: 'RC0000',
+    EXTERNAL_SERVICE_ERROR: 'RC0000',
+    VALIDATION_ERROR: 'RC000',
     // 他のエラーコードを追加することができます
   } as const;
 
   export type ErrorCodeType = (typeof ErrorCodes)[keyof typeof ErrorCodes];
+
+  export const ErrorTitles = {
+    VALIDATION_ERROR: 'Validation Error',
+    AUTHENTICATION_ERROR: 'Authentication Error',
+    AUTHORIZATION_ERROR: 'Authorization Error',
+    DATABASE_ERROR: 'Database Error',
+    EXTERNAL_SERVICE_ERROR: 'External Service Error',
+    // 必要に応じて他のタイトルを追加することができます
+  } as const;
+
+  export type ErrorTitle = (typeof ErrorTitles)[keyof typeof ErrorTitles];
 
   export const ErrorCategories = {
     USER_ERROR: 'USER_ERROR',
@@ -30,15 +41,4 @@ export namespace ErrorStatus {
 
   export type HttpStatusCodeType =
     (typeof HttpStatusCodes)[keyof typeof HttpStatusCodes];
-
-  export const ErrorTitles = {
-    VALIDATION_ERROR: 'Validation Error',
-    AUTHENTICATION_ERROR: 'Authentication Error',
-    AUTHORIZATION_ERROR: 'Authorization Error',
-    DATABASE_ERROR: 'Database Error',
-    EXTERNAL_SERVICE_ERROR: 'External Service Error',
-    // 必要に応じて他のタイトルを追加することができます
-  } as const;
-
-  export type ErrorTitle = (typeof ErrorTitles)[keyof typeof ErrorTitles];
 }
