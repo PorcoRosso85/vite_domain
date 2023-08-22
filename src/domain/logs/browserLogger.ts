@@ -1,27 +1,70 @@
-import { logLevels, logFormat } from './logConfig';
+import { LogLevels, LogLevel, logFormat } from './logConfig';
 import ILogger from './loggerInterface';
 
-const createBrowserLogger = (): ILogger => ({
-  log: (level: string, message: string, ...args: any[]) => {
-    if (logLevels.includes(level)) {
-      console[level](logFormat(level, message), ...args);
-    }
-  },
-});
+const createBrowserLogger = (): ILogger => {
+  const logger: Partial<ILogger> = {};
+
+  const allowedLevels: LogLevel[] = ['debug', 'error'];
+
+  Object.keys(LogLevels)
+    .filter((key) =>
+      allowedLevels.includes(LogLevels[key as keyof typeof LogLevels]),
+    )
+    .forEach((key) => {
+      const level = LogLevels[key as keyof typeof LogLevels];
+      logger[level] = (message: string, ...args: any[]) => {
+        console[level](logFormat(level, message), ...args);
+      };
+    });
+
+  return logger as ILogger;
+};
 
 export default createBrowserLogger;
 
 if (import.meta.vitest) {
-  const { describe, it, expect, vi } = import.meta.vitest;
+  const { describe, it, expect, afterEach, vi } = import.meta.vitest;
 
   describe('BrowserLogger', () => {
-    it('should log messages at different log levels', () => {
-      const mockLogger = createBrowserLogger();
-      logLevels.forEach((level) => {
-        // const spy = vi.fn(); // vi.fn()を使ってスパイを作成
-        // mockLogger[level] = spy;
-        // mockLogger.log(level, 'test message');
-        // expect(spy).toBeCalledWith('test message');
+    let consoleSpy: any;
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    const allowedLevels: LogLevel[] = ['debug', 'error'];
+
+    allowedLevels.forEach((level) => {
+      it(`ブラウザロガーは ${level} レベルでログを生成する`, async () => {
+        consoleSpy = vi.spyOn(console, level);
+        const logger = createBrowserLogger();
+        const message = `test message for ${level} level`;
+        const extraArg = { detail: 'extra detail' };
+
+        (logger[level] as (message: string, ...args: any[]) => void)(
+          message,
+          extraArg,
+        );
+
+        expect(consoleSpy).toHaveBeenCalledTimes(1);
+        expect(consoleSpy).toHaveBeenCalledWith(
+          expect.stringContaining(message),
+          extraArg,
+        );
+      });
+    });
+
+    // Add a test for disallowed log levels
+    const disallowedLevels = Object.keys(LogLevels).filter(
+      (key) =>
+        !allowedLevels.includes(LogLevels[key as keyof typeof LogLevels]),
+    );
+
+    disallowedLevels.forEach((level) => {
+      it(`ブラウザロガーは ${level} レベルでログを生成しない`, () => {
+        const logger = createBrowserLogger();
+        const logLevel = LogLevels[level as keyof typeof LogLevels];
+        expect(logger[logLevel]).toBeUndefined();
       });
     });
   });
