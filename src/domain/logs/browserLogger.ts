@@ -4,7 +4,7 @@ import ILogger from './loggerInterface';
 const createBrowserLogger = (): ILogger => {
   const logger: Partial<ILogger> = {};
 
-  const allowedLevels: LogLevel[] = ['debug', 'error'];
+  const allowedLevels: LogLevel[] = [LogLevels.DEBUG, LogLevels.ERROR];
 
   Object.keys(LogLevels)
     .filter((key) =>
@@ -32,7 +32,7 @@ if (import.meta.vitest) {
       vi.restoreAllMocks();
     });
 
-    const allowedLevels: LogLevel[] = ['debug', 'error'];
+    const allowedLevels: LogLevel[] = [LogLevels.DEBUG, LogLevels.ERROR];
 
     allowedLevels.forEach((level) => {
       it(`ブラウザロガーは ${level} レベルでログを生成する`, async () => {
