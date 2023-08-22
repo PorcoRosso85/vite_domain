@@ -1,5 +1,4 @@
-// constants.ts
-
+// TODO: ここで型を決めて置いて、infra層に必要な変数をとってこさせる、ここに依存させる、ここがスキーマ・API
 // アプリケーション情報
 export const APP_NAME = 'MyAwesomeApp';
 export const APP_VERSION = '1.0.0';

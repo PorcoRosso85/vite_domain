@@ -19,7 +19,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "types": ["vitest/importMeta", "vitest/globals"],
+    "types": ["vitest/importMeta", "vitest/globals", "jest", "node"],
 
     "removeComments": true,
 
@@ -31,7 +31,7 @@
     "traceResolution": false,
 
     // where to compile
-    "rootDir": "./src",
+    // "rootDir": "./src",
     "outDir": "./dist/server",
 
     // resolve module name
@@ -42,7 +42,11 @@
     },
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+    // "external/gen_lsif/protocol/src/protocol/*.ts"
+  ],
   // "exclude": ["node_modules", "src/ui/**/*"],
   "exclude": ["node_modules", "**/*samples*/*"]
 }
