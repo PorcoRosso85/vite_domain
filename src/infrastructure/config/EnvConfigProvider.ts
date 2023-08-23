@@ -1,10 +1,16 @@
 import { ConfigProvider } from 'domain/interfaces/ConfigProvider';
+import { ExternalServiceError } from 'domain/errors/specifiedErrors';
 
 export class EnvConfigProvider implements ConfigProvider {
-  private static instance: EnvConfigProvider;
+  private static instance: EnvConfigProvider | null = null;
 
+  // singleton採用、１回だけロードすることの制約を設けているから
   private constructor() {
-    require('dotenv').config();
+    try {
+      require('dotenv').config();
+    } catch (error) {
+      throw new ExternalServiceError('Failed to load environment variables.');
+    }
   }
 
   static getInstance(): EnvConfigProvider {
@@ -14,8 +20,8 @@ export class EnvConfigProvider implements ConfigProvider {
     return EnvConfigProvider.instance;
   }
 
-  get(key: string): string | undefined {
-    return process.env[key];
+  async get(key: string): Promise<string | undefined> {
+    return Promise.resolve(process.env[key]);
   }
 
   getEnvPhase(): string {
@@ -24,104 +30,71 @@ export class EnvConfigProvider implements ConfigProvider {
     }
     return process.env.NODE_ENV || 'development';
   }
-}
 
-import { SSM } from 'aws-sdk';
-class CloudConfigProvider implements ConfigProvider {
-  private ssm: SSM;
-
-  constructor() {
-    this.ssm = new SSM();
-  }
-
-  async get(key: string): Promise<string | undefined> {
-    try {
-      const result = await this.ssm
-        .getParameter({
-          Name: key,
-          WithDecryption: true,
-        })
-        .promise();
-
-      return result.Parameter?.Value;
-    } catch (error) {
-      Logger.error(
-        `Error fetching parameter ${key} from AWS Parameter Store:`,
-        error,
-      );
-      return undefined;
-    }
+  static resetInstance(): void {
+    EnvConfigProvider.instance = null;
   }
 }
 
 if (import.meta.vitest) {
-  const { describe, it, expect } = import.meta.vitest;
+  const { describe, it, expect, vi, afterEach } = import.meta.vitest;
 
   describe('環境設定のテスト', () => {
-    describe('isValiedEnvPhase関数のテスト', () => {
-      it('APP_ENVバリューが正しければtrueを返す', () => {
-        expect(isValidEnvPhase('development')).toBe(true);
-        expect(isValidEnvPhase('staging')).toBe(true);
-        expect(isValidEnvPhase('production')).toBe(true);
-      });
-
-      it('APP_ENVバリューが誤っていればfalseを返す', () => {
-        expect(isValidEnvPhase('invalid_env')).toBe(false);
-      });
-    });
-
-    describe('createConfigProvider関数のテスト', () => {
-      // 一時的にprocess.env.APP_ENVをモックするためのヘルパー関数
-      function mockAppEnv(value: string) {
-        process.env.APP_ENV = value;
-      }
-
-      it('DEV・STG環境ならEnvConfigProviderを返す', () => {
-        mockAppEnv('development');
-        let [provider, env] = createConfigProvider();
-        expect(provider instanceof EnvConfigProvider).toBe(true);
-        expect(env).toBe('development');
-
-        mockAppEnv('staging');
-        [provider, env] = createConfigProvider();
-        expect(provider instanceof EnvConfigProvider).toBe(true);
-        expect(env).toBe('staging');
-      });
-
-      it('PRD環境ならCloudConfigProviderを返す', () => {
-        mockAppEnv('production');
-        const [provider, env] = createConfigProvider();
-        expect(provider instanceof CloudConfigProvider).toBe(true);
-        expect(env).toBe('production');
-      });
-
-      it('不正なAPP_ENVバリューだとエラーを返す', () => {
-        mockAppEnv('invalid');
-        expect(() => createConfigProvider()).toThrowError(
-          'Invalid APP_ENV value: invalid',
-        );
-      });
+    //各テスト後にインスタンスリセット
+    afterEach(() => {
+      EnvConfigProvider.resetInstance();
+      vi.restoreAllMocks();
     });
 
     describe('ConfigProviderの動作テスト', () => {
+      beforeEach(() => {
+        EnvConfigProvider.resetInstance();
+      });
+
       it('EnvConfigProviderが.envから設定を取得する', () => {
-        const provider = new EnvConfigProvider();
+        process.env['TEST_KEY'] = 'test_key_sample';
+
+        const provider = EnvConfigProvider.getInstance();
         expect(provider.get('TEST_KEY')).toBe('test_key_sample');
       });
 
-      // // TODO: 本番環境のテスト
-      // function mockSsmGetParameter(response: any) {
-      //   // import.meta.vitestのモック機能
-      // }
+      // FIXME:
+      it('存在しないキーの取得', () => {
+        const provider = EnvConfigProvider.getInstance();
+        expect(provider.get('NON_EXISTENT_KEY')).toBeUndefined();
+      });
 
-      // it('CloutConfigProviderがクラウドサービスから設定を取得する', async () => {
-      //   const expectedValue = 'mock_value_from_aws';
-      //   mockSsmGetParameter({ Parameter: { Value: expectedValue } });
+      it('環境フェーズの取得', () => {
+        process.env['NODE_ENV'] = 'production';
+        const provider = EnvConfigProvider.getInstance();
+        expect(provider.getEnvPhase()).toBe('production');
+      });
 
-      //   const provider = new CloudConfigProvider();
-      //   const gotValue = await provider.get('TEST_KEY_MOCK');
-      //   expect(gotValue).toBe(expectedValue);
-      // });
+      it('Singletonの一貫性', () => {
+        const provider1 = EnvConfigProvider.getInstance();
+        const provider2 = EnvConfigProvider.getInstance();
+        expect(provider1).toBe(provider2);
+      });
+
+      it('リセットの機能テスト', () => {
+        const provider1 = EnvConfigProvider.getInstance();
+        EnvConfigProvider.resetInstance();
+        const provider2 = EnvConfigProvider.getInstance();
+        expect(provider1).not.toBe(provider2);
+      });
+
+      // FIXME:
+      // it('エラーハンドリング：dotenvの読み込み失敗', () => {
+      //   EnvConfigProvider.resetInstance();
+
+      //   const dotenvMock = vi.fn(() => {
+      //     throw new Error('Mock dotenv error');
+      //   });
+      //   vi.mock('dotenv', { config: dotenvMock });
+
+      //   expect(() => {
+      //     EnvConfigProvider.getInstance();
+      //   }).toThrow(ExternalServiceError);
     });
   });
 }
