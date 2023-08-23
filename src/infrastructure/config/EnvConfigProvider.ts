@@ -1,44 +1,28 @@
-import Logger from 'domain/logs/logs';
+import { ConfigProvider } from 'domain/interfaces/ConfigProvider';
 
-namespace Environment {
-  export const EnvPhases = {
-    DEV: 'development',
-    STG: 'staging',
-    PRD: 'production',
-  } as const;
+export class EnvConfigProvider implements ConfigProvider {
+  private static instance: EnvConfigProvider;
 
-  export type EnvPhase = (typeof EnvPhases)[keyof typeof EnvPhases];
-
-  export const EnvVerLibraries = {
-    [Environment.EnvPhases.DEV]: {
-      DATABASE_URL: 'DEV_DATABASE_URL',
-      API_URL: 'DEV_API_URL',
-    },
-    [Environment.EnvPhases.STG]: {
-      DATABASE_URL: 'STG_DATABASE_URL',
-      API_URL: 'STG_API_URL',
-    },
-    [Environment.EnvPhases.PRD]: {
-      DATABASE_URL: 'PRD_DATABASE_URL',
-      API_URL: 'PRD_API_URL',
-    },
-  } as const;
-
-  export type EnvVarLibrary =
-    (typeof EnvVerLibraries)[keyof typeof EnvVerLibraries];
-}
-
-interface ConfigProvider {
-  get(key: string): string | undefined;
-}
-
-class EnvConfigProvider implements ConfigProvider {
-  constructor() {
+  private constructor() {
     require('dotenv').config();
+  }
+
+  static getInstance(): EnvConfigProvider {
+    if (!EnvConfigProvider.instance) {
+      EnvConfigProvider.instance = new EnvConfigProvider();
+    }
+    return EnvConfigProvider.instance;
   }
 
   get(key: string): string | undefined {
     return process.env[key];
+  }
+
+  getEnvPhase(): string {
+    if (process.env.STAGING === '1') {
+      return 'staging';
+    }
+    return process.env.NODE_ENV || 'development';
   }
 }
 
@@ -69,38 +53,6 @@ class CloudConfigProvider implements ConfigProvider {
     }
   }
 }
-
-// APP_ENVのバリデーション
-function isValidEnvPhase(value: string): value is Environment.EnvPhase {
-  return Object.values(Environment.EnvPhases).includes(
-    value as Environment.EnvPhase,
-  );
-}
-function createConfigProvider(): [ConfigProvider, Environment.EnvPhase] {
-  const processAppEnv = process.env.APP_ENV || Environment.EnvPhases.DEV;
-
-  // APP_ENVのバリデーション
-  if (!isValidEnvPhase(processAppEnv)) {
-    throw new Error(`Invalid APP_ENV value: ${processAppEnv}`);
-  }
-
-  if (processAppEnv === Environment.EnvPhases.PRD) {
-    return [new CloudConfigProvider(), processAppEnv];
-  } else {
-    return [new EnvConfigProvider(), processAppEnv];
-  }
-}
-
-const [configProvider, processAppEnv] = createConfigProvider();
-
-const DATABASE_URL = configProvider.get(
-  Environment.EnvVerLibraries[processAppEnv].DATABASE_URL,
-);
-const API_URL = configProvider.get(
-  Environment.EnvVerLibraries[processAppEnv].API_URL,
-);
-
-export { DATABASE_URL, API_URL };
 
 if (import.meta.vitest) {
   const { describe, it, expect } = import.meta.vitest;
