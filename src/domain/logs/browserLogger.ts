@@ -1,10 +1,10 @@
-import { LogLevels, LogLevel, logFormat } from './logConfig';
-import ILogger from './loggerInterface';
+import { LogLevels, LogLevel, logFormat } from 'domain/logs/logConfig';
+import { BaseLogger } from 'domain/logs/loggerInterface';
 
-const createBrowserLogger = (): ILogger => {
-  const logger: Partial<ILogger> = {};
+const createBrowserLogger = (): BaseLogger => {
+  const logger: Partial<BaseLogger> = {};
 
-  const allowedLevels: LogLevel[] = [LogLevels.DEBUG, LogLevels.ERROR];
+  const allowedLevels: LogLevel[] = [LogLevels.debug, LogLevels.error];
 
   Object.keys(LogLevels)
     .filter((key) =>
@@ -17,7 +17,7 @@ const createBrowserLogger = (): ILogger => {
       };
     });
 
-  return logger as ILogger;
+  return logger as BaseLogger;
 };
 
 export default createBrowserLogger;
@@ -32,7 +32,7 @@ if (import.meta.vitest) {
       vi.restoreAllMocks();
     });
 
-    const allowedLevels: LogLevel[] = [LogLevels.DEBUG, LogLevels.ERROR];
+    const allowedLevels: LogLevel[] = [LogLevels.debug, LogLevels.error];
 
     allowedLevels.forEach((level) => {
       it(`ブラウザロガーは ${level} レベルでログを生成する`, async () => {
