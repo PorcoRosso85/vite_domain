@@ -1,4 +1,4 @@
 export interface ConfigProvider {
-  get(key: string): string | undefined;
-  getEnvPhase(): string;
+  get(key: string): Promise<string | undefined>;
+  getEnvPhase(): Promise<string>;
 }
