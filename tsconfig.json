@@ -39,8 +39,7 @@
 
     "paths": {
       "external/*": ["../external/*"]
-    },
-    "noEmit": true
+    }
   },
   "include": [
     "src/**/*.ts",
