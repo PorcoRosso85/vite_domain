@@ -31,9 +31,27 @@ export class InitializeLsifData {
 
   async processListData(): Promise<V[]> {
     const dataList = await this.lsifDataRepository.getDataList();
+    // 戻り値が undefined または null の場合のチェック
+    if (!dataList) {
+      throw new Error('Data list is undefined or null');
+    }
+
+    // 戻り値が配列であることを確認
+    if (!Array.isArray(dataList)) {
+      throw new Error('Data list is not an array');
+    }
+
+    const filteredData = dataList.filter(
+      (data) => data.type === ElementTypes.vertex,
+    );
+
+    // フィルタリングされたデータをverticesに保存
+    this.vertices = filteredData;
+
     return dataList.filter((data) => data.type === ElementTypes.vertex);
   }
 
+  // 個々の頂点を手動で足したいときに使用する
   addVertex(vertex: V): InitializeLsifData {
     if (vertex.type !== ElementTypes.vertex) {
       throw new Error(`Invalid element type: ${ElementTypes[vertex.type]}`);
@@ -130,9 +148,14 @@ if (import.meta.vitest) {
 
     // FIXME
     it('vertexでないときエラーを返す', () => {
+      const nonVertex: V = {
+        type: ElementTypes.edge as unknown as ElementTypes.vertex, // ここを 'vertex' 以外に設定
+        label: VertexLabels.source,
+        id: 'anyId',
+      };
       expect(() => {
-        initDataInstance.addVertex(vertex);
-      }).toThrow(`Invalid element type: ${ElementTypes[vertex.type]}`);
+        initDataInstance.addVertex(nonVertex);
+      }).toThrow(`Invalid element type: ${ElementTypes[nonVertex.type]}`);
     });
   });
 }
