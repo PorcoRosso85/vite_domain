@@ -6,6 +6,7 @@ import {
 import { ErrorStatus } from 'domain/errors/errorStatus';
 import { logger } from 'domain/logs/createLoggerFactory';
 
+// TODO: domain層で契約を作成する
 export namespace EnvironmentStatus {
   const envProvider = EnvConfigProvider.getInstance();
   const envPhase = async () => {

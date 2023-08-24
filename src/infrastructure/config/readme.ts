@@ -1,5 +1,4 @@
-import { EnvConfigProvider } from "infrastructure/config/EnvConfigProvider"
-
+/*
 src/
 domain/
 configurations/
@@ -87,3 +86,4 @@ DynamicConfigProvider.ts （動的設定を読み込む具体的な処理）
 ./src/infrastructure/security/README.md
 ./src/infrastructure/utils/
 ./src/infrastructure/utils/README.md
+*/
