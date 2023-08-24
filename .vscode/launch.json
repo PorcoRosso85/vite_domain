@@ -11,6 +11,19 @@
       "args": ["run", "${relativeFile}"],
       "smartStep": true,
       "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "vite-node",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite-node",
+        "./src/infrastructure/communication/expressServer.ts"
+      ],
+      "skipFiles": ["<node_internals>/**"],
+      "internalConsoleOptions": "neverOpen",
+      "console": "integratedTerminal"
     }
   ]
 }
