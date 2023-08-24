@@ -6,8 +6,21 @@ import {
 import { ErrorStatus } from 'domain/errors/errorStatus';
 import { logger } from 'domain/logs/createLoggerFactory';
 
+// TODO: domain層で契約を作成する
 export namespace EnvironmentStatus {
   const envProvider = EnvConfigProvider.getInstance();
+  const envPhase = async () => {
+    return await envProvider.getEnvPhase();
+  };
+  const isEnvPhaseValid = (phase: string): phase is EnvPhase => {
+    return (
+      Object.values(EnvPhases).includes(phase as EnvPhase) || phase === 'test'
+    );
+  };
+
+  const getEnvVar = async (key: string): Promise<string | undefined> => {
+    return await envProvider.get(key);
+  };
 
   export const EnvPhases = {
     DEV: 'development',
@@ -17,31 +30,31 @@ export namespace EnvironmentStatus {
 
   export type EnvPhase = (typeof EnvPhases)[keyof typeof EnvPhases];
 
-  // Validate the env phase
-  const envPhase: string = envProvider.getEnvPhase();
-  if (
-    envPhase !== 'staging' &&
-    envPhase !== 'development' &&
-    envPhase !== 'production' &&
-    envPhase !== 'test'
-  ) {
-    logger.debug('invalid phase in EnvironmentStatus');
-    throw new ValidationError(`Invalid ENV_PHASE: ${envPhase}`);
-  }
-
-  export const currentEnv: EnvPhase = envPhase as EnvPhase;
-
-  // Generalized env var getter
-  export const getEnvVar = (key: string): string | undefined => {
-    return envProvider.get(key);
+  let currentEnvPhase: EnvPhase | null = null;
+  export const initialize = async () => {
+    const phase = await envPhase(); // 非同期関数の結果を変数に格納
+    if (phase !== null && isEnvPhaseValid(phase)) {
+      // ここでnullチェックを追加
+      currentEnvPhase = phase;
+    } else {
+      logger.debug('invalid phase in EnvironmentStatus');
+      throw new ValidationError(`Invalid ENV_PHASE: ${phase}`);
+    }
   };
 
-  export const EnvVarLibrary = {
+  export const getCurrentEnvPhase = (): EnvPhase => {
+    if (currentEnvPhase === null) {
+      throw new Error('Not initialized');
+    }
+    return currentEnvPhase;
+  };
+
+  export const EnvVars = {
     DATABASE_URL: getEnvVar('DATABASE_URL') || '',
     API_URL: getEnvVar('API_URL') || '',
   } as const;
 
-  export type EnvVar = keyof typeof EnvVarLibrary;
+  export type EnvVar = keyof typeof EnvVars;
 }
 
 if (import.meta.vitest) {

@@ -1,7 +1,7 @@
-import { LogLevels, logFormat } from './logConfig';
-import { BaseLogger } from './loggerInterface';
+import { LogLevels, logFormat } from 'domain/logs/LogConfig';
+import { BaseLogger } from 'domain/logs/BaseLogger';
 
-const createServerLogger = (): BaseLogger => {
+export const createServerLogger = (): BaseLogger => {
   const logger: Partial<BaseLogger> = {};
 
   Object.keys(LogLevels).forEach((key) => {
@@ -13,7 +13,6 @@ const createServerLogger = (): BaseLogger => {
 
   return logger as BaseLogger;
 };
-export default createServerLogger;
 
 // TODO: もしwinstonを機能として追加する場合
 // import winston from 'winston';
@@ -80,6 +79,14 @@ if (import.meta.vitest) {
           expect.stringContaining(message),
           extraArg,
         );
+        it(`should output ${level} log without throwing an error`, () => {
+          const logger = createServerLogger();
+          const message = `test message for ${level} level`;
+          const extraArg = { detail: 'extra detail' };
+
+          // 注意: これはコンソールに実際にログを出力します
+          logger[level](message, extraArg);
+        });
       });
     });
   });

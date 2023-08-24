@@ -1,20 +1,25 @@
-import { ConfigProvider } from 'domain/interfaces/ConfigProvider';
+import { IConfigProvider } from 'domain/interfaces/ConfigProvider';
+import { GetConfigInput } from 'domain/interfaces/GetConfigInput';
+import { ConfigSourceTypes } from 'domain/interfaces/GetConfigInput';
 import { logger } from 'domain/logs/createLoggerFactory';
 import { SSM } from 'aws-sdk';
 
-export class CloudConfigProvider implements ConfigProvider {
+export class CloudConfigProvider implements IConfigProvider {
   private ssm: SSM;
 
   constructor(ssmInstance: SSM) {
     this.ssm = ssmInstance;
   }
 
-  async get(key: string): Promise<string | undefined> {
+  async get(input: GetConfigInput): Promise<string | number | undefined> {
     try {
+      if (input.source !== ConfigSourceTypes.CLOUD) {
+        return Promise.reject(new Error('Invalid source type'));
+      }
       logger.debug('calling getParameter');
       const result = await this.ssm
         .getParameter({
-          Name: key,
+          Name: input.key,
           WithDecryption: true,
         })
         .promise();
@@ -27,60 +32,59 @@ export class CloudConfigProvider implements ConfigProvider {
       return undefined;
     }
   }
-
-  async getEnvPhase(): Promise<string> {
-    const env = await this.get('envPhaseKeyInSSM');
-    return env || 'production';
-  }
 }
 
 if (import.meta.vitest) {
-  describe('環境設定のテスト', () => {
-    describe('ConfigProviderの動作テスト', () => {
-      let ssmMock: any;
-      let cloudConfigProvider: CloudConfigProvider;
+  describe('CloudConfigProviderテスト', () => {
+    let ssmMock: any;
+    let cloudConfigProvider: CloudConfigProvider;
 
-      beforeEach(() => {
-        ssmMock = {
-          getParameter: vi.fn(),
-        };
-        cloudConfigProvider = new CloudConfigProvider(ssmMock as SSM);
-      });
+    beforeEach(() => {
+      ssmMock = {
+        getParameter: vi.fn(),
+      };
+      cloudConfigProvider = new CloudConfigProvider(ssmMock as SSM);
+    });
 
-      // FIXME
-      it('CloudConfigProviderがクラウドサービスから設定を取得する', async () => {
-        const mockResponse = {
-          Parameter: {
-            Value: 'testValue',
-          },
-        };
-        ssmMock.getParameter.mockResolvedValue(mockResponse);
+    // FIXME
+    it('CloudConfigProviderがクラウドから設定を正確に取得する', async () => {
+      const mockResponse = {
+        Parameter: {
+          Value: 'testValue',
+        },
+      };
+      ssmMock.getParameter.mockResolvedValue(mockResponse);
 
-        const value = await cloudConfigProvider.get('someKey');
+      const input: GetConfigInput = {
+        key: 'someKey',
+        source: ConfigSourceTypes.CLOUD,
+      };
+      const value = await cloudConfigProvider.get(input);
 
-        expect(value).toEqual('testValue');
-      });
+      expect(value).toEqual('testValue');
+    });
 
-      it('CloudConfigProviderが例外を適切に処理する', async () => {
-        ssmMock.getParameter.mockRejectedValue(new Error('Test Error'));
+    it('CloudConfigProviderが例外を適切に処理する', async () => {
+      ssmMock.getParameter.mockRejectedValue(new Error('Test Error'));
 
-        const value = await cloudConfigProvider.get('someKey');
+      const input: GetConfigInput = {
+        key: 'someKey',
+        source: ConfigSourceTypes.CLOUD,
+      };
+      const value = await cloudConfigProvider.get(input);
 
-        expect(value).toBeUndefined();
-      });
-      // FIXME
-      it('getEnvPhaseが環境フェーズを適切に取得する', async () => {
-        const mockResponse = {
-          Parameter: {
-            Value: 'staging',
-          },
-        };
-        ssmMock.getParameter.mockResolvedValue(mockResponse);
+      expect(value).toBeUndefined();
+    });
 
-        const envPhase = await cloudConfigProvider.getEnvPhase();
+    it('CloudConfigProviderが不正なソースタイプで呼び出された場合にエラーを返す', async () => {
+      const input: GetConfigInput = {
+        key: 'someKey',
+        source: ConfigSourceTypes.LOCAL,
+      };
 
-        expect(envPhase).toEqual('staging');
-      });
+      await expect(cloudConfigProvider.get(input)).rejects.toThrow(
+        'Invalid source type',
+      );
     });
   });
 }

@@ -1,4 +1,4 @@
-import { V } from 'domain/entities/lsifData';
+import { V } from 'domain/entities/LsifDataEntities';
 
 export class LsifDataDto {
   nodes: V[];

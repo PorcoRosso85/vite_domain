@@ -7,7 +7,8 @@ import { EnvironmentStatus } from 'infrastructure/config/EnvironmentStatus';
  */
 export function isPrd() {
   return (
-    EnvironmentStatus?.currentEnv === EnvironmentStatus?.EnvPhases?.PRD ?? false
+    EnvironmentStatus?.getCurrentEnvPhase() ===
+      EnvironmentStatus?.EnvPhases?.PRD ?? false
   );
 }
 
@@ -21,9 +22,10 @@ if (import.meta.vitest) {
 
   describe('EnvironmentStatus and its related functionalities', () => {
     it('should return true when currentEnv is PRD', () => {
-      const mockCurrentEnv = vi
-        .spyOn(EnvironmentStatus, 'currentEnv', 'get')
+      const mockGetCurrentEnvPhase = vi
+        .spyOn(EnvironmentStatus, 'getCurrentEnvPhase')
         .mockReturnValue('production');
+
       const mockEnvPhases = vi
         .spyOn(EnvironmentStatus, 'EnvPhases', 'get')
         .mockReturnValue({
@@ -34,14 +36,15 @@ if (import.meta.vitest) {
 
       expect(isPrd()).toBe(true);
 
-      mockCurrentEnv.mockRestore();
+      mockGetCurrentEnvPhase.mockRestore();
       mockEnvPhases.mockRestore();
     });
 
     it('should return false when currentEnv is not PRD', () => {
-      const mockCurrentEnv = vi
-        .spyOn(EnvironmentStatus, 'currentEnv', 'get')
+      const mockGetCurrentEnvPhase = vi
+        .spyOn(EnvironmentStatus, 'getCurrentEnvPhase')
         .mockReturnValue('development');
+
       const mockEnvPhases = vi
         .spyOn(EnvironmentStatus, 'EnvPhases', 'get')
         .mockReturnValue({
@@ -52,14 +55,15 @@ if (import.meta.vitest) {
 
       expect(isPrd()).toBe(false);
 
-      mockCurrentEnv.mockRestore();
+      mockGetCurrentEnvPhase.mockRestore();
       mockEnvPhases.mockRestore();
     });
 
     it('should return false when currentEnv is undefined', () => {
-      const mockCurrentEnv = vi
-        .spyOn(EnvironmentStatus, 'currentEnv', 'get')
+      const mockGetCurrentEnvPhase = vi
+        .spyOn(EnvironmentStatus, 'getCurrentEnvPhase')
         .mockReturnValue(undefined as any);
+
       const mockEnvPhases = vi
         .spyOn(EnvironmentStatus, 'EnvPhases', 'get')
         .mockReturnValue({
@@ -70,7 +74,7 @@ if (import.meta.vitest) {
 
       expect(isPrd()).toBe(false);
 
-      mockCurrentEnv.mockRestore();
+      mockGetCurrentEnvPhase.mockRestore();
       mockEnvPhases.mockRestore();
     });
   });

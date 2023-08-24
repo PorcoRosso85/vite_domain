@@ -1,7 +1,7 @@
-import { LogLevels, LogLevel, logFormat } from 'domain/logs/logConfig';
-import { BaseLogger } from 'domain/logs/loggerInterface';
+import { LogLevels, LogLevel, logFormat } from 'domain/logs/LogConfig';
+import { BaseLogger } from 'domain/logs/BaseLogger';
 
-const createBrowserLogger = (): BaseLogger => {
+export const createBrowserLogger = (): BaseLogger => {
   const logger: Partial<BaseLogger> = {};
 
   const allowedLevels: LogLevel[] = [LogLevels.debug, LogLevels.error];
@@ -19,8 +19,6 @@ const createBrowserLogger = (): BaseLogger => {
 
   return logger as BaseLogger;
 };
-
-export default createBrowserLogger;
 
 if (import.meta.vitest) {
   const { describe, it, expect, afterEach, vi } = import.meta.vitest;

@@ -1,6 +1,6 @@
-import { BaseError } from 'domain/errors/baseErrors';
-import { ErrorStatus } from 'domain/errors/errorStatus';
-import { AdditionalErrorInfo } from 'domain/errors/additionalErrorInfo';
+import { BaseError } from 'domain/errors/BaseErrors';
+import { ErrorStatus } from 'domain/errors/ErrorStatus';
+import { AdditionalErrorInfo } from 'domain/errors/AdditionalErrorInfo';
 
 export {
   AuthenticationError,

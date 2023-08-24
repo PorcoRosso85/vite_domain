@@ -1,5 +1,5 @@
-import { AdditionalErrorInfo } from 'domain/errors/additionalErrorInfo';
-import { ErrorStatus } from 'domain/errors/errorStatus';
+import { AdditionalErrorInfo } from 'domain/errors/AdditionalErrorInfo';
+import { ErrorStatus } from 'domain/errors/ErrorStatus';
 export { BaseError };
 
 class BaseError extends Error {

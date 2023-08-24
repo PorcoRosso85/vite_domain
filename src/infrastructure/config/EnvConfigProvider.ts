@@ -1,100 +1,102 @@
-import { ConfigProvider } from 'domain/interfaces/ConfigProvider';
+import { IConfigProvider } from 'domain/interfaces/ConfigProvider';
+import {
+  GetConfigInput,
+  ConfigSourceTypes,
+} from 'domain/interfaces/GetConfigInput';
+import { ConstantsProvider } from 'domain/interfaces/ConstantsProvider';
 import { ExternalServiceError } from 'domain/errors/specifiedErrors';
+import { logger } from 'domain/logs/createLoggerFactory';
 
-export class EnvConfigProvider implements ConfigProvider {
-  private static instance: EnvConfigProvider | null = null;
+export class EnvConfigProvider implements IConfigProvider {
+  private ConstantsProvider: ConstantsProvider;
 
-  // singleton採用、１回だけロードすることの制約を設けているから
-  private constructor() {
-    try {
-      require('dotenv').config();
-    } catch (error) {
-      throw new ExternalServiceError('Failed to load environment variables.');
+  constructor(constantsProvider: ConstantsProvider) {
+    this.ConstantsProvider = constantsProvider;
+  }
+
+  async get(input: GetConfigInput): Promise<string | number | undefined> {
+    switch (input.source) {
+      case ConfigSourceTypes.LOCAL:
+        return Promise.resolve(process.env[input.key]);
+      case ConfigSourceTypes.APP:
+        return Promise.resolve(this.ConstantsProvider.getConstants(input.key));
+      default:
+        return Promise.reject(new Error('Invalid source type'));
     }
-  }
-
-  static getInstance(): EnvConfigProvider {
-    if (!EnvConfigProvider.instance) {
-      EnvConfigProvider.instance = new EnvConfigProvider();
-    }
-    return EnvConfigProvider.instance;
-  }
-
-  async get(key: string): Promise<string | undefined> {
-    return Promise.resolve(process.env[key]);
-  }
-
-  getEnvPhase(): string {
-    if (process.env.STAGING === '1') {
-      return 'staging';
-    }
-    return process.env.NODE_ENV || 'development';
-  }
-
-  static resetInstance(): void {
-    EnvConfigProvider.instance = null;
   }
 }
 
-if (import.meta.vitest) {
-  const { describe, it, expect, vi, afterEach } = import.meta.vitest;
+/*
+使用例
+1, EnvConfigProviderのインスタンスを取得
+const envConfigProvider = EnvConfigProvider.getInstance(new ConstantsService());
 
-  describe('環境設定のテスト', () => {
-    //各テスト後にインスタンスリセット
-    afterEach(() => {
-      EnvConfigProvider.resetInstance();
-      vi.restoreAllMocks();
+1, 環境変数から設定を取得
+const nodeEnv = await envConfigProvider.get({ source: ConfigSourceTypes.ENV, key: 'NODE_ENV' });
+TODO: key一覧
+
+1, アプリ内の定数から設定を取得
+const apiTimeout = await envConfigProvider.get({ source: ConfigSourceTypes.APP, key: 'apiTimeout' });
+TODO: key一覧
+
+この設計は非常に堅牢で、柔軟性もあります。ただし、Singletonパターンはテストが難しいとされることがありますので、その点を考慮することも重要です。特にユニットテストを実施する場合、resetInstance メソッドを使ってSingletonインスタンスをリセットする可能性があります。
+*/
+
+if (import.meta.vitest) {
+  const { describe, it, expect, vi } = import.meta.vitest;
+  let constantsProviderMock: any;
+  let envConfigProvider: EnvConfigProvider;
+
+  describe('EnvConfigProvider', () => {
+    beforeEach(() => {
+      constantsProviderMock = {
+        getConstants: vi.fn(),
+      };
+      envConfigProvider = new EnvConfigProvider(constantsProviderMock);
     });
 
-    describe('ConfigProviderの動作テスト', () => {
-      beforeEach(() => {
-        EnvConfigProvider.resetInstance();
-      });
+    it('EnvConfigProvider がローカル環境変数から設定を適切に取得する', async () => {
+      process.env.TEST_KEY = 'testValue';
+      const input: GetConfigInput = {
+        key: 'TEST_KEY',
+        source: ConfigSourceTypes.LOCAL,
+      };
 
-      it('EnvConfigProviderが.envから設定を取得する', () => {
-        process.env['TEST_KEY'] = 'test_key_sample';
+      const value = await envConfigProvider.get(input);
 
-        const provider = EnvConfigProvider.getInstance();
-        expect(provider.get('TEST_KEY')).toBe('test_key_sample');
-      });
+      expect(value).toBe('testValue');
+    });
+    it('EnvConfigProvider が ConstantsProvider から設定を適切に取得する', async () => {
+      constantsProviderMock.getConstants.mockReturnValue('testValue');
+      const input: GetConfigInput = {
+        key: 'TEST_KEY',
+        source: ConfigSourceTypes.APP,
+      };
 
-      // FIXME:
-      it('存在しないキーの取得', () => {
-        const provider = EnvConfigProvider.getInstance();
-        expect(provider.get('NON_EXISTENT_KEY')).toBeUndefined();
-      });
+      const value = await envConfigProvider.get(input);
 
-      it('環境フェーズの取得', () => {
-        process.env['NODE_ENV'] = 'production';
-        const provider = EnvConfigProvider.getInstance();
-        expect(provider.getEnvPhase()).toBe('production');
-      });
+      expect(value).toBe('testValue');
+      expect(constantsProviderMock.getConstants.mock.calls[0]).toEqual([
+        'TEST_KEY',
+      ]);
+    });
 
-      it('Singletonの一貫性', () => {
-        const provider1 = EnvConfigProvider.getInstance();
-        const provider2 = EnvConfigProvider.getInstance();
-        expect(provider1).toBe(provider2);
-      });
+    it('不正な source が渡された場合、適切なエラーがスローされる', async () => {
+      const input: GetConfigInput = {
+        key: 'TEST_KEY',
+        source: 'INVALID' as any,
+      };
 
-      it('リセットの機能テスト', () => {
-        const provider1 = EnvConfigProvider.getInstance();
-        EnvConfigProvider.resetInstance();
-        const provider2 = EnvConfigProvider.getInstance();
-        expect(provider1).not.toBe(provider2);
-      });
-
-      // FIXME:
-      // it('エラーハンドリング：dotenvの読み込み失敗', () => {
-      //   EnvConfigProvider.resetInstance();
-
-      //   const dotenvMock = vi.fn(() => {
-      //     throw new Error('Mock dotenv error');
-      //   });
-      //   vi.mock('dotenv', { config: dotenvMock });
-
-      //   expect(() => {
-      //     EnvConfigProvider.getInstance();
-      //   }).toThrow(ExternalServiceError);
+      try {
+        await envConfigProvider.get(input);
+        fail('Should have thrown an error');
+      } catch (e) {
+        if (e instanceof Error) {
+          expect(e.message).toBe('Invalid source type');
+        } else {
+          fail('Caught exception is not an instance of Error');
+        }
+      }
     });
   });
 }

@@ -1,9 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { V } from 'domain/entities/LsifDataEntities';
 
-const filePath = path.resolve(__dirname, './jsonrpc.lsif');
+const filePath: string = path.resolve(__dirname, './jsonrpc.lsif');
 
-function fetchData(filePath, numberOfRows) {
+function fetchData(filePath: string, numberOfRows: number): V[] {
   if (!fs.existsSync(filePath)) {
     throw new Error(`File ${filePath} does not exist`);
   }
@@ -19,7 +20,8 @@ function fetchData(filePath, numberOfRows) {
   return extractedLines;
 }
 
-export const headData = fetchData(filePath, 10);
+export const headData: V[] = fetchData(filePath, 10);
+export const serializedHeadData: string = JSON.stringify(headData);
 
 if (import.meta.vitest) {
   const { describe, it, expect } = import.meta.vitest;
@@ -27,8 +29,8 @@ if (import.meta.vitest) {
   describe('fetchData function for lsif file', () => {
     // 正常
     it('ソースコードをそのまま実行', () => {
-      const data = fetchData(filePath, 100);
-      // console.log(data);
+      const data = fetchData(filePath, 10);
+      console.log(data);
     });
 
     it('ファイルが存在しない場合', () => {
