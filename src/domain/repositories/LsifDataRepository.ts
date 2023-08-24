@@ -1,4 +1,4 @@
-import { V, ElementTypes } from 'domain/entities/lsifData';
+import { V, ElementTypes } from 'domain/entities/LsifDataEntities';
 
 export interface LsifDataRepository {
   getDataList(): Promise<V[]>;
