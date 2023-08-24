@@ -1,6 +1,6 @@
 import createServerLogger from 'domain/logs/ServerLogger';
 import createBrowserLogger from 'domain/logs/BrowserLogger';
-import { BaseLogger } from 'domain/logs/LoggerInterface';
+import { BaseLogger } from 'domain/logs/BaseLogger';
 
 const createLogger = (): BaseLogger => {
   if (typeof window === 'undefined') {

@@ -1,5 +1,5 @@
 import { LogLevels, LogLevel, logFormat } from 'domain/logs/LogConfig';
-import { BaseLogger } from 'domain/logs/LoggerInterface';
+import { BaseLogger } from 'domain/logs/BaseLogger';
 
 const createBrowserLogger = (): BaseLogger => {
   const logger: Partial<BaseLogger> = {};
