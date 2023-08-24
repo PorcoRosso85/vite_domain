@@ -4,7 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "vitest current file",
+      "name": "vitest ${file}",
       "autoAttachChildProcesses": true,
       "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
@@ -21,6 +21,16 @@
         "vite-node",
         "./src/infrastructure/communication/expressServer.ts"
       ],
+      "skipFiles": ["<node_internals>/**"],
+      "internalConsoleOptions": "neverOpen",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "vite",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite"],
       "skipFiles": ["<node_internals>/**"],
       "internalConsoleOptions": "neverOpen",
       "console": "integratedTerminal"
