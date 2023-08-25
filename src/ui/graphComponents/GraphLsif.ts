@@ -1,4 +1,6 @@
-import G6 from '@antv/g6';
+import G6, { IGraph } from '@antv/g6';
+import * as GraphLsifModules from 'ui/graphComponents/_GraphLsif';
+import { logger } from 'domain/logs/CreateLogger';
 
 export class GraphLsifElement
   extends HTMLElement
@@ -26,14 +28,7 @@ export class GraphLsifElement
     const container = document.createElement('div');
     this.shadowRoot.appendChild(container);
 
-    const tipDiv = document.createElement('div');
-    tipDiv.innerHTML = 'Here is LSIF';
-    container.appendChild(tipDiv);
-
-    this.graph = new G6.Graph({
-      container: container,
-      // ... その他のG6設定
-    });
+    this.graph = renderGraph(container);
 
     this.shadowRoot.appendChild(container);
   }
@@ -48,4 +43,22 @@ export class GraphLsifElement
   onError(error: Error) {
     console.error('An error occurred:', error);
   }
+}
+
+export async function renderGraph(container: HTMLElement): Promise<IGraph> {
+  const tipDiv = document.createElement('div');
+  tipDiv.innerHTML = 'Here is LSIF';
+  container.appendChild(tipDiv);
+
+  const graph = new G6.Graph(GraphLsifModules.graphOptions(container));
+  logger.debug(`${GraphLsifModules.fetchedDataPromise}`);
+  console.log(
+    'Is fetchedData undefined?',
+    GraphLsifModules.fetchedDataPromise === undefined,
+  );
+  const data = await GraphLsifModules.fetchedDataPromise;
+  graph.data(data);
+  graph.render();
+
+  return graph;
 }
