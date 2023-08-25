@@ -1,3 +1,5 @@
+export { ComponentOne, ComponentTwo };
+
 class ComponentOne extends HTMLElement {
   constructor() {
     super();
@@ -28,10 +30,3 @@ class ComponentTwo extends HTMLElement {
     shadow.appendChild(container);
   }
 }
-
-function registerHelloComponents() {
-  customElements.define('component-one', ComponentOne);
-  customElements.define('component-two', ComponentTwo);
-}
-
-export { registerHelloComponents };
