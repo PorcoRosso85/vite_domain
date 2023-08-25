@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "useDefineForClassFields": true,
+    "useDefineForClassFields": false, // Lit（特にLitElementやReactiveElementを基礎としたカスタムエレメント）でプロパティを正しく監視できないときに発生します。その原因は通常、Litが用意したアクセサ（getter/setter）が、何らかの方法で上書きされてしまっているから
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
@@ -39,7 +39,9 @@
 
     "paths": {
       "external/*": ["../external/*"]
-    }
+    },
+
+    "experimentalDecorators": true
   },
   "include": [
     "src/**/*.ts",
