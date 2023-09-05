@@ -2,18 +2,18 @@ import G6 from '@antv/g6';
 // import Sigma from "sigma";
 import { trpc } from 'ui/communication/TrpcClient';
 
-// export const graphData = trpc.graphData.query();
-export const graphData = {
-  nodes: [
-    { id: 'node1', label: 'Node 1' },
-    { id: 'node2', label: 'Node 2' },
-    { id: 'node3', label: 'Node 3' },
-  ],
-  edges: [
-    { source: 'node1', target: 'node2' },
-    { source: 'node2', target: 'node3' },
-  ],
-};
+export const graphData = await trpc.graphData.query();
+// export const graphData = {
+//   nodes: [
+//     { id: 'node1', label: 'Node 1' },
+//     { id: 'node2', label: 'Node 2' },
+//     { id: 'node3', label: 'Node 3' },
+//   ],
+//   edges: [
+//     { source: 'node1', target: 'node2' },
+//     { source: 'node2', target: 'node3' },
+//   ],
+// };
 
 export const graphConfig = (container: HTMLElement) => {
   return {
