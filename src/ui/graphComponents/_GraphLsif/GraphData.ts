@@ -1,4 +1,8 @@
-export async function expressFetchData() {
+import { GraphData, TreeGraphData } from '@antv/g6';
+
+export async function expressFetchData(): Promise<
+  GraphData | TreeGraphData | undefined
+> {
   console.log('Attempting to fetch data...');
   try {
     const res = await fetch('/api/data', { mode: 'cors' });
@@ -8,8 +12,10 @@ export async function expressFetchData() {
     return data;
   } catch (error) {
     console.error('Fetch failed: ', error);
-    return null;
+    return undefined;
   }
 }
 
-export const fetchedDataPromise = expressFetchData();
+export const fetchedDataPromise: Promise<
+  GraphData | TreeGraphData | undefined
+> = expressFetchData();

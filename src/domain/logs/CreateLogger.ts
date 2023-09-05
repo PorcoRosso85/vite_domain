@@ -1,5 +1,5 @@
-import createServerLogger from 'domain/logs/ServerLogger';
-import createBrowserLogger from 'domain/logs/BrowserLogger';
+import { createServerLogger } from 'domain/logs/ServerLogger';
+import { createBrowserLogger } from 'domain/logs/BrowserLogger';
 import { BaseLogger } from 'domain/logs/BaseLogger';
 
 const createLogger = (): BaseLogger => {
@@ -12,13 +12,13 @@ const createLogger = (): BaseLogger => {
 export const logger = createLogger();
 
 // TODO: ロガーに非同期を使いたくなったら
-const createLoggerAsync = async (): Promise<BaseLogger> => {
-  if (typeof window === 'undefined') {
-    return createServerLogger();
-  } else {
-    return Promise.resolve(createBrowserLogger());
-  }
-};
+// const createLoggerAsync = async (): Promise<BaseLogger> => {
+//   if (typeof window === 'undefined') {
+//     return createServerLogger();
+//   } else {
+//     return Promise.resolve(createBrowserLogger());
+//   }
+// };
 
 // createLoggerを使ってロガーインスタンスを生成しておきたかったら
 // let createLoggerSingleton: BaseLogger | null = null;

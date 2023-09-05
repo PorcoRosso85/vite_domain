@@ -1,6 +1,7 @@
 import { LogLevels, LogLevel, logFormat } from 'domain/logs/LogConfig';
 import { BaseLogger } from 'domain/logs/BaseLogger';
 
+// TODO: サーバー側のlogger.debug, logger.infoを、console.logに対応させる必要がある
 export const createBrowserLogger = (): BaseLogger => {
   const logger: Partial<BaseLogger> = {};
 

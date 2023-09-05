@@ -4,38 +4,36 @@ export function graphOptions(container: HTMLElement): GraphOptions {
   return {
     container: container,
     width: container.scrollWidth,
-    height: container.scrollHeight || 1920,
+    height: (container.scrollHeight || 500) - 20,
     fitView: true,
     modes: {
-      default: ['drag-canvas', 'drag-node'],
+      default: ['drag-canvas', 'zoom-canvas', 'drag-node', 'lasso-select'],
     },
     layout: {
-      type: 'dagre',
-      rankdir: 'LR',
-      align: 'UL',
-      controlPoints: true,
-      nodesepFunc: () => 1,
-      ranksepFunc: () => 1,
-    },
-    defaultNode: {
-      size: [30, 20],
-      type: 'rect',
-      style: {
-        lineWidth: 2,
-        stroke: '#5B8FF9',
-        fill: '#C6E5FF',
+      type: 'force',
+      preventOverlap: true,
+      // TODO: any
+      linkDistance: (d: any) => {
+        if (d.source.id === 'node0') {
+          return 300;
+        }
+        return 60;
       },
-    },
-    defaultEdge: {
-      type: 'polyline',
-      size: 1,
-      color: '#e2e2e2',
-      style: {
-        endArrow: {
-          path: 'M 0,0 L 8,4 L 8,-4 Z',
-          fill: '#e2e2e2',
-        },
-        radius: 20,
+      nodeStrength: (d: any) => {
+        if (d.isLeaf) {
+          return -50;
+        }
+        return -10;
+      },
+      edgeStrength: (d: any) => {
+        if (
+          d.source.id === 'node1' ||
+          d.source.id === 'node2' ||
+          d.source.id === 'node3'
+        ) {
+          return 0.7;
+        }
+        return 0.1;
       },
     },
   };
