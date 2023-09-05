@@ -17,10 +17,7 @@
       "request": "launch",
       "name": "vite-node",
       "runtimeExecutable": "npx",
-      "runtimeArgs": [
-        "vite-node",
-        "./src/infrastructure/communication/expressServer.ts"
-      ],
+      "runtimeArgs": ["vite-node", "${file}"],
       "skipFiles": ["<node_internals>/**"],
       "internalConsoleOptions": "neverOpen",
       "console": "integratedTerminal"
